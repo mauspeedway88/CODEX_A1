@@ -1,0 +1,59 @@
+Entendido. Para darte la máxima claridad: con el **Cloudflare Worker** no aumentamos la precisión a 30 metros (eso solo se logra si el usuario acepta compartir GPS), pero lo que sí logramos es **capturar la información en el borde**, antes de que cualquier VPN o configuración del navegador del usuario intente esconderla, obteniendo el dato más puro posible que la red pueda entregar.
+
+Aquí tienes la bitácora actualizada incluyendo los logros actuales en la Fase 0 y la nueva estrategia de interceptación en la Fase 1.
+
+---
+
+### BITÁCORA DE CONSTRUCCIÓN "NETMARLYN"
+
+*(Nota obligatoria: Consultarme cómo lo quiero y cómo se hará antes de escribir código).*
+
+**FASE 0: INFRAESTRUCTURA LOGRADA (Estado Actual)**
+
+* **0.1 Portada Web Operativa:** www.netmarlyn.site ya es accesible públicamente.
+* **0.2 Interfaz Base:** Botón de escaneo central integrado y funcional en la portada.
+* **0.3 Arquitectura Local-Cloud:** Conexión establecida entre MacMini (localhost) y el mundo exterior vía Cloudflare Tunnels (Zero Trust).
+
+**FASE 1: ANALÍTICA INTERCEPTORA Y ESTRUCTURA**
+
+* **1.1a Cloudflare Worker "The Gatekeeper":** Configurar un Worker que intercepte la visita en milisegundos para:
+* Capturar IP, País, Ciudad y Timestamp antes de llegar al túnel.
+* **Página de Mantenimiento:** Si el túnel con la MacMini está caído, el Worker mostrará automáticamente una pantalla estética de "Regresamos pronto".
+1.1b Despliegue de Fachada (Cloudflare Pages + Worker): Implementar el index.html en la red global para garantizar respuesta inmediata y captura de analítica, incluso con picos masivos de tráfico, manteniendo el "fallback" de mantenimiento activo.
+
+
+* **1.2 Módulo de Rastreo Interno:** Crear el contador en la MacMini que procese los datos enviados por el Worker para distinguir entre visitas nuevas, recurrentes y ubicación por ciudad/proveedor.
+* **1.3 Menú de Navegación:** Diseñar la botonera del website (esperando tus instrucciones de diseño).
+* **1.4 Directorio de Instituciones:** Sección inferior con logos de colegios y sus "Mini-Métricas" (Alumnado, Infografías, Maquetas 3D y Calificación).
+
+**FASE 2: FÁBRICA DE IDENTIDADES Y FUSIÓN (Vía Antigravity/Jules)**
+
+* **2.1 Ingesta de Listas:** Carga de alumnos y asignación de QR base.
+* **2.2 App de Fusión (Flujo del Maestro):** Proceso de escaneo de carnet docente -> Selección de alumno -> Toma de foto -> Fusión final de datos (Foto + QR + GPS + Identidad).
+
+**FASE 3: MOTOR Y PRUEBAS DE ESCANEO**
+
+* **3.1 Reconocimiento de Roles:** Lógica para identificar al instante si el carnet es de Alumno, Maestro, Director, Conserje o Padre.
+* **3.2 Registro Atómico:** Grabación de cada evento de escaneo con su respectivo historial.
+* **3.3 Piloto de Campo:** Pruebas de validación real para demostraciones con directores.
+
+**FASE 4: DESARROLLO DE MÓDULOS (Orden Estricto)**
+
+* **4.1** Módulo de Infografías.
+* **4.2** Módulo Máquina del Tiempo.
+* **4.3** Módulo de Giroscopio.
+* **4.4** Módulo SOS_estoy.
+* **4.5** Módulo de Maquetas 3D Interactivas.
+
+**FASE 5: SISTEMA DE REPORTES POR CARNET**
+
+* **5.1 Lógica de Permisos:** Visualización selectiva según el rol que escanea.
+* **5.2 Dashboards de Progreso:** Gráficas de rendimiento y participación por individuo o grado.
+
+**FASE 6: DESPLIEGUE Y DEMOSTRACIÓN FINAL**
+
+* **6.1 Demo Institucional:** Presentación del ecosistema completo funcionando de punta a punta en los colegios.
+
+---
+
+¿Procedemos con el **Paso 1.1** para configurar el Worker y la captura de datos de visita?

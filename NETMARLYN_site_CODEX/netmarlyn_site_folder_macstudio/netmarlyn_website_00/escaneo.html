@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Netmarlyn - Escaneo de Identidad</title>
+
+    <!-- Configuración PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#001342">
+    <link rel="apple-touch-icon" href="assets/G_icono_netmarlyn.jpg">
+
+    <link rel="icon" type="image/png" href="assets/favicon.png?v=1">
+    <link rel="stylesheet" href="style.css?v=10">
+    <script src="js/nav_active.js"></script>
+    
+    <!-- LIBRERÍA DE DECODIFICACIÓN QR (Ligera y compatible) -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
+    <style>
+        .scan-container {
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .scanner-box {
+            background: rgba(0, 50, 150, 0.2);
+            border: 2px dashed #00e5ff;
+            border-radius: 20px;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
+        }
+
+        /* Animación de línea de escaneo solo cuando la cámara esté activa */
+        .scanning-line {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #00e5ff;
+            box-shadow: 0 0 15px #00e5ff;
+            animation: scan-line 3s infinite linear;
+            z-index: 10;
+        }
+
+        @keyframes scan-line {
+            0% { top: 0; }
+            50% { top: 100%; }
+            100% { top: 0; }
+        }
+
+        .scanner-title {
+            color: white;
+            font-size: 20px;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        /* --- VISUALIZADOR DE CÁMARA --- */
+        #camera-wrapper {
+            display: none;
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto 20px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #00e5ff;
+            background: black;
+            aspect-ratio: 1/1;
+        }
+
+        #camera-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .manual-input-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .scan-input {
+            background: rgba(0, 19, 66, 0.8);
+            border: 1px solid #142f56;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            font-family: monospace;
+            font-size: 16px;
+            width: 180px;
+            text-align: center;
+            letter-spacing: 2px;
+            outline: none;
+        }
+
+        .scan-input:focus {
+            border-color: #00e5ff;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+        }
+
+        .btn-lookup {
+            background: #d8ff00;
+            color: #001342;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-lookup:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #00e5ff;
+        }
+
+        /* --- PREMIUM INTERACTIVE CARNET --- */
+        #result-card {
+            display: none;
+            margin-top: 30px;
+            perspective: 1000px;
+            animation: carnet-reveal 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
+        }
+
+        @keyframes carnet-reveal {
+            from { opacity: 0; transform: translateY(40px) rotateX(-15deg); }
+            to { opacity: 1; transform: translateY(0) rotateX(0); }
+        }
+
+        .carnet-wrapper {
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 20px rgba(0,229,255,0.2);
+            position: relative;
+            color: #001342;
+            text-align: left;
+        }
+
+        .carnet-top {
+            background: #001342;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid #d8ff00;
+        }
+
+        .carnet-brand {
+            color: white;
+            font-weight: 900;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .carnet-type {
+            color: #d8ff00;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .carnet-main {
+            padding: 25px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .carnet-photo-area {
+            flex: 0 0 110px;
+        }
+
+        .photo-framer {
+            width: 110px;
+            height: 130px;
+            background: #f0f4f8;
+            border: 2px solid #001342;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .photo-framer img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .biometric-scan {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(216, 255, 0, 0.6);
+            box-shadow: 0 0 10px #d8ff00;
+            animation: bio-scan 2s infinite ease-in-out;
+        }
+
+        @keyframes bio-scan {
+            0% { top: 0; }
+            50% { top: 97%; }
+            100% { top: 0; }
+        }
+
+        .carnet-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .carnet-name {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1.2;
+            color: #001342;
+            text-transform: uppercase;
+        }
+
+        .info-row {
+            margin-bottom: 6px;
+        }
+
+        .info-label {
+            font-size: 9px;
+            color: #7a8ba8;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #d8ff00;
+            color: #001342;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 900;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(216, 255, 0, 0.3);
+        }
+
+        .carnet-footer {
+            padding: 15px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .id-qr-mini {
+            width: 60px;
+            height: 60px;
+            padding: 5px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .id-text-group {
+            text-align: right;
+        }
+
+        .digital-id {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            font-weight: bold;
+            color: #00e5ff;
+            background: #001342;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .loading-spinner {
+            display: none;
+            color: #00e5ff;
+            font-size: 12px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        #camera-status {
+            color: #829efe;
+            font-size: 11px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <header class="top-bar">
+            <nav class="top-nav">
+                <a href="index.html">inicio</a> - 
+                <a href="colegios.html">colegios</a> - 
+                <a href="soporte.html">soporte</a>
+            </nav>
+            <div class="logo-container">
+                <img id="main-logo" src="assets/G_nombrelogo.png" alt="Netmarlyn Logo">
+            </div>
+        </header>
+
+        <section class="scan-container">
+            <div class="scanner-box">
+                <div class="scanner-title">ESCÁNER ANDROID v2</div>
+                <p style="color:#4fc3ff; font-size:12px; margin-bottom:20px;">Use Chrome e ingrese por <b style="color:#d8ff00">HTTPS</b> para activar la cámara.</p>
+                
+                <!-- Wrapper de Cámara Real -->
+                <div id="camera-wrapper">
+                    <div class="scanning-line" id="scan-line"></div>
+                    <video id="camera-preview" playsinline muted autoplay></video>
+                    <canvas id="qr-canvas" style="display:none;"></canvas>
+                </div>
+
+                <div id="btn-start-camera">
+                    <img src="assets/G_boton_escaneo.png" alt="Abrir Cámara" style="cursor: pointer; filter: drop-shadow(0 0 15px #00e5ff);" onclick="startScanner()">
+                    <div style="color:#d8ff00; font-size:11px; margin-top:8px; font-weight:bold; letter-spacing:1px;">IDENTIFICACIÓN BIOMÉTRICA</div>
+                </div>
+
+                <div id="btn-stop-camera" style="display:none; margin-top:10px;">
+                    <button onclick="stopScanner()" style="background:transparent; border:1px solid #ff3333; color:#ff3333; padding:10px 20px; border-radius:30px; font-size:11px; font-weight:bold; cursor:pointer;">✕ CANCELAR ESCANEO</button>
+                </div>
+
+                <div id="camera-status"></div>
+                
+                <div class="manual-input-group" id="input-group">
+                    <input type="text" class="scan-input" id="qr-input" placeholder="0000000-XXXX" autocomplete="off" maxlength="12">
+                    <button class="btn-lookup" onclick="lookupStudent()">VALIDAR</button>
+                </div>
+
+                <div id="status-msg" class="loading-spinner">CONECTANDO CON SERVIDOR...</div>
+            </div>
+
+            <!-- CARNET DIGITAL INTERACTIVO (RESULTADO) -->
+            <div id="result-card">
+                <div class="carnet-wrapper">
+                    <div class="carnet-top">
+                        <div class="carnet-brand">NETMARLYN® ID</div>
+                        <div class="carnet-type">AUTORIZADO</div>
+                    </div>
+                    
+                    <div class="carnet-main">
+                        <div class="carnet-photo-area">
+                            <div class="photo-framer">
+                                <div class="biometric-scan"></div>
+                                <img id="res-photo" src="" alt="Identidad Alumno">
+                            </div>
+                        </div>
+                        <div class="carnet-info">
+                            <div class="carnet-name" id="res-name">NOMBRE ALUMNO</div>
+                            
+                            <div class="info-row">
+                                <div class="info-label">Institución</div>
+                                <div class="info-value" id="res-college">COLEGIO NETMARLYN</div>
+                            </div>
+                            
+                            <div class="info-row">
+                                <div class="info-label">Grado / Nivel</div>
+                                <div class="info-value" id="res-grade">-- --</div>
+                            </div>
+
+                            <div class="verified-badge">
+                                <span>🛡️</span> REGISTRO VERIFICADO
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carnet-footer">
+                        <img id="res-qr-img" class="id-qr-mini" src="" alt="QR">
+                        <div class="id-text-group">
+                            <div style="font-size:8px; color:#999; margin-bottom:2px;">CÓDIGO DIGITAL</div>
+                            <div class="digital-id" id="res-id-text">0000000-0000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
+                    <button onclick="window.print()" style="background:rgba(216, 255, 0, 0.2); border:1px solid #d8ff00; color:#d8ff00; padding:8px 15px; border-radius:20px; font-size:10px; font-weight:bold; cursor:pointer;">🖨️ IMPRIMIR</button>
+                    <button onclick="document.getElementById('result-card').style.display='none'" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3); color:white; padding:8px 15px; border-radius:20px; font-size:10px; font-weight:bold; cursor:pointer;">✕ CERRAR</button>
+                </div>
+            </div>
+
+            <div id="error-msg" style="display:none; color:#ff3333; font-size:13px; margin-top:15px; background:rgba(255,51,51,0.1); padding:12px; border-radius:10px; border:1px solid #ff3333; font-weight:bold;"></div>
+        </section>
+
+            <div id="error-msg" style="display:none; color:#ff3333; font-size:13px; margin-top:15px; background:rgba(255,51,51,0.1); padding:12px; border-radius:10px; border:1px solid #ff3333; font-weight:bold;"></div>
+        </section>
+
+    </div>
+
+    <script>
+        let videoStream = null;
+        let scanning = false;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var logo = document.getElementById("main-logo");
+            if (logo) logo.src = 'assets/G_nombrelogo.png?v=' + new Date().getTime();
+
+            document.getElementById('qr-input').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') lookupStudent();
+            });
+        });
+
+        async function startScanner() {
+            const wrapper = document.getElementById('camera-wrapper');
+            const video = document.getElementById('camera-preview');
+            const btnStart = document.getElementById('btn-start-camera');
+            const btnStop = document.getElementById('btn-stop-camera');
+            const line = document.getElementById('scan-line');
+            const status = document.getElementById('camera-status');
+            const error = document.getElementById('error-msg');
+
+            error.style.display = 'none';
+            status.textContent = "⚙️ Solicitando acceso a cámara...";
+
+            try {
+                // Configuración mejorada para teléfonos Samsung A21s
+                const constraints = { 
+                    video: { 
+                        facingMode: { exact: "environment" },
+                        width: { ideal: 640 },
+                        height: { ideal: 640 }
+                    } 
+                };
+
+                // Intento 1: Cámara Trasera Forzada
+                try {
+                    videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                } catch (fallbackErr) {
+                    console.warn("Fallo cámara exacta, intentando modo general");
+                    status.textContent = "⚙️ Reintentando configuración general...";
+                    videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                }
+                
+                video.srcObject = videoStream;
+                video.onloadedmetadata = () => {
+                    video.play();
+                    wrapper.style.display = 'block';
+                    btnStart.style.display = 'none';
+                    btnStop.style.display = 'block';
+                    line.style.display = 'block';
+                    status.textContent = "✅ Cámara lista. Escanee el código QR.";
+                    scanning = true;
+                    requestAnimationFrame(tick);
+                };
+            } catch (err) {
+                console.error("Error cámara:", err);
+                status.textContent = "";
+                error.style.display = 'block';
+                error.innerHTML = "<b>❌ ERROR DE CÁMARA:</b><br>" + 
+                    (err.name === 'NotAllowedError' ? "Permiso denegado. Active la cámara en ajustes de Chrome." : err.message) +
+                    "<br><br><small>Asegúrese de entrar por <b>https://www.netmarlyn.site</b></small>";
+            }
+        }
+
+        function stopScanner() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+            document.getElementById('camera-wrapper').style.display = 'none';
+            document.getElementById('btn-start-camera').style.display = 'block';
+            document.getElementById('btn-stop-camera').style.display = 'none';
+            document.getElementById('scan-line').style.display = 'none';
+            document.getElementById('camera-status').textContent = "";
+            scanning = false;
+        }
+
+        function tick() {
+            if (!scanning) return;
+
+            const video = document.getElementById('camera-preview');
+            const canvas = document.getElementById('qr-canvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                canvas.height = video.videoHeight;
+                canvas.width = video.videoWidth;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                if (typeof jsQR === 'undefined') {
+                    console.error("jsQR no cargado!");
+                    return;
+                }
+                
+                const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: "dontInvert",
+                });
+
+                if (code) {
+                    // Vibración táctica si el dispositivo lo permite
+                    if (navigator.vibrate) navigator.vibrate(100);
+                    
+                    document.getElementById('qr-input').value = code.data.toUpperCase();
+                    stopScanner();
+                    lookupStudent();
+                    return;
+                }
+            }
+            requestAnimationFrame(tick);
+        }
+
+        async function lookupStudent() {
+            const qr = document.getElementById('qr-input').value.trim().toUpperCase();
+            if (!qr) return;
+
+            const card = document.getElementById('result-card');
+            const error = document.getElementById('error-msg');
+            const spinner = document.getElementById('status-msg');
+
+            card.style.display = 'none';
+            error.style.display = 'none';
+            spinner.style.display = 'block';
+
+            try {
+                const response = await fetch('/api/identificar_alumno', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ qr: qr })
+                });
+
+                const data = await response.json();
+                spinner.style.display = 'none';
+
+                if (data.status === 'ok') {
+                    const alu = data.alumno;
+                    
+                    // Llenado de Datos del Carnet Premium
+                    document.getElementById('res-name').textContent = alu.nombre;
+                    document.getElementById('res-grade').textContent = alu.grado.toUpperCase();
+                    document.getElementById('res-college').textContent = alu.colegio.toUpperCase();
+                    document.getElementById('res-id-text').textContent = qr;
+                    
+                    // QR del Carnet (Generación dinámica)
+                    document.getElementById('res-qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qr}&color=001342`;
+
+                    // Foto del Alumno
+                    const photoImg = document.getElementById('res-photo');
+                    photoImg.src = `/api/ver_foto?qr=${qr}&v=${Date.now()}`;
+                    
+                    photoImg.onerror = function() {
+                        this.src = 'https://ui-avatars.com/api/?name=' + alu.nombre + '&background=f0f4f8&color=001342';
+                    };
+
+                    card.style.display = 'block';
+                    
+                    // Scroll suave para revelar el carnet
+                    setTimeout(() => {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+
+                    // Pequeño feedback tátil (vibración corta)
+                    if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+
+                } else {
+                    error.style.display = 'block';
+                    error.innerHTML = "❌ <b>ALUMNO NO ENCONTRADO</b><br><small>Verifique que el alumno tenga código asignado en la sección 'Fotos'.</small>";
+                }
+            } catch (err) {
+                spinner.style.display = 'none';
+                error.style.display = 'block';
+                error.textContent = "❌ Error de conexión con el motor Netmarlyn.";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Netmarlyn - Fotografías</title>
+
+    <!-- Configuración PWA (Manifiesto e Íconos) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#001342">
+
+    <!-- Configuración para iOS (iPhone/iPad) -->
+    <link rel="apple-touch-icon" href="assets/G_icono_netmarlyn.jpg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Netmarlyn">
+
+    <link rel="icon" type="image/png" href="assets/favicon.png?v=1">
+    <link rel="stylesheet" href="style.css?v=10">
+    <script src="js/nav_active.js"></script>
+
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 60px auto;
+            padding: 40px 30px;
+            background-color: rgba(0, 50, 150, 0.4);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+
+        .login-title {
+            color: white;
+            font-size: 24px;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .login-subtitle {
+            color: #4fc3ff;
+            font-size: 14px;
+            margin-bottom: 40px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .input-label {
+            display: block;
+            color: #a8a8a8;
+            font-size: 12px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            background-color: rgba(0, 19, 66, 0.8);
+            border: 1px solid #142f56;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .form-control:focus {
+            border-color: #00e5ff;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            background: #d8ff00;
+            color: #001342;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(216, 255, 0, 0.4);
+        }
+
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #a8a8a8;
+            transition: color 0.3s;
+            user-select: none;
+        }
+
+        .eye-icon:hover {
+            color: #00e5ff;
+        }
+
+        .cajon-btn {
+            position: relative;
+            width: 202px;
+            height: 65px;
+            background-image: url('assets/boton_netmarlyn_general.png');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, filter 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .cajon-btn span {
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.7);
+            pointer-events: none;
+            line-height: 1.35;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cajon-btn span em {
+            font-style: normal;
+            display: block;
+        }
+
+        .cajon-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.2);
+        }
+
+        .cajon-btn:active {
+            transform: translateY(1px) scale(0.97);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <header class="top-bar">
+            <nav class="top-nav">
+                <a href="index.html?v=8813">inicio</a> • 
+                <a href="colegios.html?v=8813">colegios</a> • 
+                <a href="soporte.html?v=8813">soporte</a>
+            </nav>
+            <div class="logo-container">
+                <img id="main-logo" src="assets/G_nombrelogo.png" alt="Netmarlyn Logo">
+            </div>
+        </header>
+
+        <section class="login-container">
+            <div class="login-title">ACCESO COLEGIAL</div>
+            <div class="login-subtitle">Área de Asignación Fotográfica</div>
+
+            <div class="input-group">
+                <label class="input-label">Código de Institución</label>
+                <input type="text" class="form-control" id="codigo_colegio" maxlength="4" placeholder="EJ: XA9P">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Contraseña</label>
+                <div class="password-wrapper">
+                    <input type="password" class="form-control" id="password_colegio" placeholder="••••••••">
+                    <span class="eye-icon" id="eye-icon" onclick="togglePassword()">👁️</span>
+                </div>
+            </div>
+
+            <button class="login-btn" onclick="validarIngreso()">INGRESAR AL PORTAL</button>
+        </section>
+
+        <!-- ===== PANEL DE FOTOS (Panel permanente, siempre en el DOM) ===== -->
+        <div id="panel-fotos" style="display:none; max-width:600px; margin: 0 auto 20px auto; background: rgba(0,5,30,0.97); border: 1px solid #829efe; border-radius: 14px; padding: 25px 20px; box-shadow: 0 0 30px rgba(130,158,254,0.25);">
+            <div style="font-size:16px; color:#829efe; letter-spacing:2px; margin-bottom:15px; text-align:center; font-weight:bold;" id="panel-titulo-display">📸 FOTOGRAFÍAS: CARGANDO...</div>
+            
+            <div id="lista-alumnos-container" style="background:rgba(130,158,254,0.08); border:1px dashed rgba(130,158,254,0.4); border-radius:10px; padding:14px 16px; margin-bottom:20px; font-size:13px; color:#c8d8ff; line-height:1.9; max-height:450px; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+                <!-- Filas de alumnos inyectadas por JS -->
+            </div>
+
+            <div style="text-align:center;">
+                <button onclick="cerrarPanelFotos()" style="background:none; border:none; color:#555; font-size:12px; cursor:pointer; letter-spacing:1px; transition:color 0.3s;" onmouseover="this.style.color='#829efe'" onmouseout="this.style.color='#555'">✕ CERRAR PANEL</button>
+            </div>
+        </div>
+
+        <!-- ===== FOTO MODAL Y CÁMARA ===== -->
+        <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none;" onchange="procesarCaptura(event)">
+        <div id="modal-foto" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,19,66,0.95); z-index:9999; flex-direction:column; align-items:center; justify-content:center; padding:20px;">
+            <h3 id="modal-foto-titulo" style="color:#00e5ff; letter-spacing:1px; margin-bottom:15px; text-align:center;"></h3>
+            <img id="modal-foto-preview" style="max-width:100%; max-height:60vh; border-radius:10px; border:2px solid #829efe; margin-bottom:20px; box-shadow:0 0 20px rgba(0,229,255,0.2);">
+            <p style="color:#a8a8a8; font-size:11px; margin-top:-10px; margin-bottom:20px;">Verifique que el alumno esté bien enfocado</p>
+            
+            <div style="display:flex; gap:15px; width:100%; max-width:400px; justify-content:center;">
+                <button onclick="retomarFoto()" style="flex:1; padding:15px; background:transparent; border:1px solid #ff3333; color:#ff3333; border-radius:8px; font-weight:bold; cursor:pointer;">🔄 RETOMAR</button>
+                <button onclick="guardarFoto()" id="btn-save-foto" style="flex:1; padding:15px; background:#d8ff00; border:none; color:#001342; border-radius:8px; font-weight:bold; cursor:pointer; box-shadow:0 0 15px rgba(216,255,0,0.4);">💾 GUARDAR</button>
+            </div>
+            <button onclick="cerrarModalFoto()" style="margin-top:25px; background:none; border:none; color:#555; text-decoration:underline; font-size:12px; cursor:pointer;">Cancelar Proceso</button>
+        </div>
+
+        <!-- ===== CARNET DIGITAL MODAL (PREMIUM UNIFICADO v2) ===== -->
+        <div id="modal-carnet" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:99999; flex-direction:column; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(5px);">
+            <style>
+                .carnet-wrapper-unified {
+                    width: 100%;
+                    max-width: 360px;
+                    background: #ffffff;
+                    border-radius: 18px;
+                    overflow: hidden;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+                    position: relative;
+                    color: #001342;
+                    font-family: 'Segoe UI', Roboto, sans-serif;
+                    border: 1px solid rgba(216, 255, 0, 0.3);
+                }
+                .carnet-edge-top {
+                    height: 8px;
+                    background: linear-gradient(90deg, #001342 0%, #00e5ff 50%, #001342 100%);
+                }
+                .carnet-header {
+                    background: #001342;
+                    padding: 20px;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                    border-bottom: 2px solid #d8ff00;
+                }
+                .carnet-logo-img {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 6px;
+                    background: white;
+                    padding: 3px;
+                }
+                .carnet-header-text {
+                    color: white;
+                }
+                .carnet-header-text h2 {
+                    margin: 0;
+                    font-size: 16px;
+                    font-weight: 900;
+                    letter-spacing: 1px;
+                }
+                .carnet-header-text p {
+                    margin: 2px 0 0 0;
+                    font-size: 10px;
+                    color: #d8ff00;
+                    font-weight: bold;
+                    letter-spacing: 2px;
+                }
+                .carnet-body {
+                    padding: 25px;
+                    position: relative;
+                    background-image: url('assets/G_nombrelogo.png');
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: 80%;
+                    background-blend-mode: overlay;
+                }
+                .carnet-body-content {
+                    display: flex;
+                    gap: 20px;
+                    z-index: 2;
+                    position: relative;
+                }
+                /* Marca de agua sutil */
+                .watermark-overlay {
+                    position: absolute;
+                    top: 0; left: 0; width: 100%; height: 100%;
+                    background: radial-gradient(circle at center, rgba(216, 255, 0, 0.03) 0%, transparent 70%);
+                    pointer-events: none;
+                }
+                .carnet-photo-box {
+                    flex: 0 0 110px;
+                    height: 135px;
+                    background: white;
+                    border: 3px solid #001342;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+                }
+                .carnet-photo-box img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+                .carnet-data {
+                    flex: 1;
+                    padding-top: 5px;
+                }
+                .carnet-name {
+                    font-size: 18px;
+                    font-weight: 900;
+                    color: #001342;
+                    margin-bottom: 5px;
+                    line-height: 1.1;
+                    text-transform: uppercase;
+                }
+                .carnet-grade-label {
+                    font-size: 12px;
+                    color: #555;
+                    font-weight: 600;
+                    margin-bottom: 12px;
+                    display: block;
+                }
+                .verified-chip {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    background: #d8ff00;
+                    color: #001342;
+                    padding: 6px 12px;
+                    border-radius: 30px;
+                    font-size: 9px;
+                    font-weight: 900;
+                    box-shadow: 0 4px 10px rgba(216, 255, 0, 0.3);
+                }
+                .carnet-footer {
+                    background: #f1f4f9;
+                    border-top: 1px solid #dde3ed;
+                    padding: 15px 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+                .footer-qr {
+                    width: 70px;
+                    height: 70px;
+                    background: white;
+                    padding: 5px;
+                    border: 1px solid #cbd5e0;
+                    border-radius: 8px;
+                }
+                .footer-id-box {
+                    text-align: right;
+                }
+                .footer-id-label {
+                    font-size: 8px;
+                    color: #718096;
+                    font-weight: bold;
+                    margin-bottom: 3px;
+                }
+                .footer-id-number {
+                    background: #001342;
+                    color: white;
+                    font-family: 'Courier New', Courier, monospace;
+                    font-weight: bold;
+                    font-size: 13px;
+                    padding: 4px 10px;
+                    border-radius: 6px;
+                    letter-spacing: 1px;
+                }
+            </style>
+            
+            <div class="carnet-wrapper-unified">
+                <div class="carnet-edge-top"></div>
+                <div class="carnet-header">
+                    <img src="assets/G_icono_netmarlyn.jpg" class="carnet-logo-img" alt="Logo">
+                    <div class="carnet-header-text">
+                        <h2>NETMARLYN®</h2>
+                        <p>IDENTIDAD DIGITAL</p>
+                    </div>
+                </div>
+                
+                <div class="carnet-body">
+                    <div class="watermark-overlay"></div>
+                    <div class="carnet-body-content">
+                        <div class="carnet-photo-box">
+                            <img id="carnet-foto" src="" alt="Alumno">
+                        </div>
+                        <div class="carnet-data">
+                            <span class="carnet-name" id="carnet-nombre">CARGANDO...</span>
+                            <span class="carnet-grade-label" id="carnet-grado">CARGANDO...</span>
+                            <div class="verified-chip">
+                                🛡️ PERFIL VERIFICADO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carnet-footer">
+                    <img id="carnet-qr" class="footer-qr" src="">
+                    <div class="footer-id-box">
+                        <div class="footer-id-label">CÓDIGO NETMARLYN ID</div>
+                        <div class="footer-id-number" id="carnet-id-text">0000000-0000</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:12px; margin-top:30px;">
+                <button onclick="window.print()" style="background:#d8ff00; color:#001342; border:none; padding:14px 28px; border-radius:30px; font-weight:900; cursor:pointer; font-size:12px; transition: all 0.2s; box-shadow: 0 10px 20px rgba(0,0,0,0.3);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">🖨️ IMPRIMIR CARNET</button>
+                <button onclick="cerrarCarnet()" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); padding:14px 28px; border-radius:30px; font-weight:bold; cursor:pointer; font-size:12px; transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">✕ CERRAR</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Lógica de Simulación de la Interfaz (Aislado) -->
+    <script>
+        async function validarIngreso() {
+            const code = document.getElementById('codigo_colegio').value.trim().toUpperCase();
+            const pass = document.getElementById('password_colegio').value.trim();
+            
+            if (!code || !pass) {
+                alert("Por favor ingrese código y contraseña.");
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/validar_colegio', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codigo: code, password: pass })
+                });
+
+                if (!res.ok) {
+                    throw new Error("Credenciales inválidas");
+                }
+
+                const data = await res.json();
+                const colegioIdentificado = `COLEGIO ${data.codigo}: ${data.nombre}`;
+
+                // Guardar sesión
+                sessionStorage.setItem('nm_codigo', data.codigo);
+                sessionStorage.setItem('nm_pass', pass);
+                codigoColegioActivo = data.codigo;
+
+                const section = document.querySelector('.login-container');
+                section.style.maxWidth = "600px";
+                section.style.background = "transparent";
+                section.style.border = "none";
+                section.style.boxShadow = "none";
+                section.style.padding = "10px";
+
+                // Plantilla Móvil estricta solicitada
+                section.innerHTML = `
+                    <div style="text-align: center; color: white; margin-bottom: 30px;">
+                        <h2 style="color: #00e5ff; font-size: 22px; letter-spacing: 2px;">${colegioIdentificado}</h2>
+                        <p style="color: #a8a8a8; font-size: 14px;">ZONA DE TRABAJO (MATRIZ DE AULAS)</p>
+                    </div>
+                
+                <style>
+                    .grado-row {
+                        display: flex;
+                        justify-content: center;
+                        align-items: stretch;
+                        margin-bottom: 8px;
+                        gap: 10px;
+                    }
+                    .matrix-btn {
+                        flex: 2; /* Ocupa el doble (2/3) */
+                        max-width: 65%;
+                        background-color: rgba(0, 19, 66, 0.8);
+                        color: white;
+                        border: 1px solid #142f56;
+                        padding: 12px;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        text-align: left;
+                        transition: all 0.3s;
+                        letter-spacing: 1px;
+                        cursor: pointer;
+                    }
+                    .matrix-btn:hover {
+                        border-color: #00e5ff;
+                        background-color: rgba(0, 229, 255, 0.1);
+                    }
+                    .btn-ok {
+                        border-color: #d8ff00;
+                    }
+                    .status-indicator {
+                        flex: 1; /* Ocupa la mitad que el botón (1/3) */
+                        max-width: 30%;
+                        font-size: 11px; /* Letra un poco más pequeña para no apretarse */
+                        font-weight: bold;
+                        text-align: center;
+                        padding: 10px 5px;
+                        border-radius: 6px;
+                        letter-spacing: 1px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        flex-direction: column;
+                    }
+                    .status-missing {
+                        color: #ff3333;
+                        background-color: rgba(255, 51, 51, 0.1);
+                        border: 1px dashed #ff3333;
+                    }
+                    .status-ok {
+                        color: #d8ff00;
+                        background-color: rgba(216, 255, 0, 0.1);
+                        border: 1px solid #d8ff00;
+                    }
+                    .section-title {
+                        color: #00e5ff;
+                        font-size: 14px;
+                        margin-top: 25px;
+                        margin-bottom: 15px;
+                        border-bottom: 1px solid #00e5ff;
+                        padding-bottom: 5px;
+                        text-align: left;
+                        letter-spacing: 2px;
+                    }
+                </style>
+
+                <!-- Cajón Mágico ahora vive fuera del template como elemento permanente del DOM -->
+
+                <div class="matrix-grid" style="display: flex; flex-direction: column; width: 100%;">
+                    
+                    <div class="section-title">PREKÍNDER</div>
+                    <div class="grado-row">
+                        <button class="matrix-btn" onclick="abrirPanelFotos(this, 'Prekinder_A')">Prekínder A</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">Prekínder B</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">Prekínder C</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">Prekínder D</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="section-title">KÍNDER</div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">Kínder A</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">Kínder B</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">Kínder C</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">Kínder D</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="section-title">PREPARATORIA</div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">Preparatoria A</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">Preparatoria B</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">Preparatoria C</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">Preparatoria D</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="section-title">PRIMER CICLO</div>
+                    <div class="grado-row">
+                        <button class="matrix-btn" onclick="abrirPanelFotos(this, '1_Grado_A')">1° Grado A</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">1° Grado B</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">1° Grado C</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">1° Grado D</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">1° Grado E</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="grado-row">
+                        <button class="matrix-btn">2° Grado A</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">2° Grado B</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">2° Grado C</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">2° Grado D</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">2° Grado E</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="grado-row">
+                        <button class="matrix-btn">3° Grado A</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">3° Grado B</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">3° Grado C</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">3° Grado D</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">3° Grado E</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="section-title">SEGUNDO CICLO</div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">4° Grado A</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">4° Grado B</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">4° Grado C</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">4° Grado D</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">4° Grado E</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="grado-row">
+                        <button class="matrix-btn">5° Grado A</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">5° Grado B</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">5° Grado C</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">5° Grado D</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">5° Grado E</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="grado-row">
+                        <button class="matrix-btn">6° Grado A</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">6° Grado B</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">6° Grado C</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">6° Grado D</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">6° Grado E</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="section-title">TERCER CICLO</div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">7° Grado A</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">7° Grado B</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">7° Grado C</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">7° Grado D</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">7° Grado E</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="grado-row">
+                        <button class="matrix-btn">8° Grado A</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">8° Grado B</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">8° Grado C</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">8° Grado D</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">8° Grado E</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="grado-row">
+                        <button class="matrix-btn">9° Grado A</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">9° Grado B</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">9° Grado C</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">9° Grado D</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">9° Grado E</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="section-title">BACHILLERATO</div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">1° Bachillerato A <span style="float: right; color:#a8a8a8;">| Tipo: ________</span></button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">1° Bachillerato B <span style="float: right; color:#a8a8a8;">| Tipo: ________</span></button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">1° Bachillerato C <span style="float: right; color:#a8a8a8;">| Tipo: ________</span></button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">1° Bachillerato D <span style="float: right; color:#a8a8a8;">| Tipo: ________</span></button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">1° Bachillerato E <span style="float: right; color:#a8a8a8;">| Tipo: ________</span></button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="grado-row">
+                        <button class="matrix-btn">2° Bachillerato A <span style="float: right; color:#a8a8a8;">| Tipo: ________</span></button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">2° Bachillerato B <span style="float: right; color:#a8a8a8;">| Tipo: ________</span></button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">2° Bachillerato C <span style="float: right; color:#a8a8a8;">| Tipo: ________</span></button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">2° Bachillerato D <span style="float: right; color:#a8a8a8;">| Tipo: ________</span></button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                    <div class="grado-row">
+                        <button class="matrix-btn">2° Bachillerato E <span style="float: right; color:#a8a8a8;">| Tipo: ________</span></button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+
+                    <div class="section-title">PERSONAL Y DOCENTES</div>
+                    <div class="grado-row">
+                        <button class="matrix-btn" onclick="abrirPanelFotos(this, 'Personal_Institucion')">Personal de la Institución (Docentes, Directores, Administrativos, etc)</button>
+                        <div class="status-indicator status-missing">
+                            <span>❌</span> FALTA LISTA
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // ASIGNAR ONCLICK DINÁMICAMENTE A TODOS LOS BOTONES QUE NO LO TENGAN
+            setTimeout(() => {
+                document.querySelectorAll('.matrix-btn').forEach(btn => {
+                    if (!btn.getAttribute('onclick')) {
+                        let rawText = btn.childNodes[0].nodeValue || btn.textContent;
+                        let aulaGenerada = rawText.trim().replace(/ /g, '_').replace(/í/g, 'i').replace(/°/g, 'grado');
+                        btn.setAttribute('onclick', `abrirPanelFotos(this, '${aulaGenerada}')`);
+                    }
+                });
+                // Sincronizar estados (verde/rojo) inmediatamente
+                restoreIndicadores();
+            }, 50);
+            } catch (err) {
+                alert("Acceso denegado: " + err.message);
+                console.error(err);
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            // Asegurar que la página empiece desde el primer píxel arriba
+            window.scrollTo(0, 0);
+
+            var logo = document.getElementById("main-logo");
+            if (logo) {
+                logo.src = 'assets/G_nombrelogo.png?v=' + new Date().getTime();
+            }
+
+            // Habilitar envío con tecla ENTER
+            const codeInput = document.getElementById('codigo_colegio');
+            const passInput = document.getElementById('password_colegio');
+            
+            function checkEnter(e) {
+                if (e.key === 'Enter') {
+                    validarIngreso();
+                }
+            }
+
+            if(codeInput) codeInput.addEventListener('keydown', checkEnter);
+            if(passInput) passInput.addEventListener('keydown', checkEnter);
+
+            // AUTO-LOGIN: Si había una sesión activa antes del reload, re-entrar automáticamente
+            const sesionCodigo = sessionStorage.getItem('nm_codigo');
+            const sesionPass   = sessionStorage.getItem('nm_pass');
+            if (sesionCodigo && sesionPass) {
+                if(codeInput) codeInput.value = sesionCodigo;
+                if(passInput) passInput.value = sesionPass;
+                // Pequeño delay para asegurar que el DOM está listo
+                setTimeout(() => {
+                    validarIngreso();
+                    // Luego restaurar indicadores verdes y asegurar scroll arriba
+                    setTimeout(() => {
+                        restoreIndicadores();
+                        window.scrollTo(0, 0);
+                    }, 300);
+                }, 100);
+            }
+        });
+
+        // Toggle Mostrar/Ocultar Contraseña
+        function togglePassword() {
+            const passInput = document.getElementById('password_colegio');
+            const eyeIcon = document.getElementById('eye-icon');
+            if (passInput.type === "password") {
+                passInput.type = "text";
+                eyeIcon.innerText = "🙈";
+            } else {
+                passInput.type = "password";
+                eyeIcon.innerText = "👁️";
+            }
+        }
+
+        // ============================================================
+        //  PANEL FOTÓGRAFICO: Abrir/Cerrar panel + Obtener Alumnos
+        // ============================================================
+        let aulaActiva = null;
+        let botonActivo = null;
+        let codigoColegioActivo = null;
+        let colorPrimarioActual = "#001342";
+        let colorSecundarioActual = "#00e5ff";
+
+        async function abrirPanelFotos(btn, nombreAula) {
+            aulaActiva = nombreAula;
+            botonActivo = btn;
+
+            // Detectar código del colegio desde la sesión activa
+            codigoColegioActivo = sessionStorage.getItem('nm_codigo') || 'A123';
+
+            const panel = document.getElementById('panel-fotos');
+            const titulo = document.getElementById('panel-titulo-display');
+            const contenedor = document.getElementById('lista-alumnos-container');
+            
+            titulo.textContent = '📸 FOTOGRAFÍAS: ' + nombreAula.replace(/_/g, ' ') + ' (Cargando...)';
+            contenedor.innerHTML = '<div style="text-align:center; color:#829efe; padding:20px;">Contactando motor Netmarlyn...</div>';
+            
+            panel.style.display = 'block';
+            setTimeout(() => { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
+
+            try {
+                const payload = {
+                    codigo: codigoColegioActivo || 'A123',
+                    aula: aulaActiva
+                };
+
+                const response = await fetch('/api/obtener_lista', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'ok') {
+                    titulo.textContent = '📸 FOTOGRAFÍAS: ' + nombreAula.replace(/_/g, ' ');
+                    contenedor.innerHTML = '';
+                    
+                    // Guardar colores institucionales
+                    colorPrimarioActual = data.color_primario || "#001342";
+                    colorSecundarioActual = data.color_secundario || "#00e5ff";
+                    color3Actual = data.color_3 || "#ffffff";
+                    color4Actual = data.color_4 || "#d8ff00";
+
+                    data.alumnos.forEach((alumno, index) => {
+                        const div = document.createElement('div');
+                        div.style.cssText = 'background: rgba(0, 19, 66, 0.8); border: 1px solid #142f56; border-radius: 8px; padding: 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px;';
+                        
+                        const infoHtml = `
+                            <div style="flex:1;">
+                                <div style="font-weight:bold; color:white; font-size:14px;">${index + 1}. ${alumno.nombre}</div>
+                                <div style="color:#00e5ff; font-family:monospace; font-size:11px; margin-top:4px;">ID: ${alumno.qr}</div>
+                            </div>
+                        `;
+
+                        // Botón de Tomar Foto
+                        const btnText = alumno.foto ? '✅ FOTO OK' : '📷 TOMAR FOTO';
+                        const btnBg = alumno.foto ? '#d8ff00' : '#ff3333';
+                        const btnColor = alumno.foto ? '#001342' : 'white';
+                        
+                        const btnHtml = `
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <button onclick="iniciarCaptura('${alumno.qr}', '${alumno.nombre.replace(/'/g, "\\'")}', this)" style="background: ${btnBg}; color: ${btnColor}; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; min-width: 110px; justify-content: center; font-size: 11px; box-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                                    ${btnText}
+                                </button>
+                                <button onclick="mostrarCarnet('${alumno.qr}', '${alumno.nombre.replace(/'/g, "\\'")}', '${alumno.foto ? 'base64' : ''}')" style="background: rgba(130,158,254,0.1); color: #829efe; border: 1px solid rgba(130,158,254,0.4); padding: 5px; border-radius: 4px; font-size: 9px; font-weight: bold; cursor: pointer; text-transform: uppercase;">
+                                    🆔 VER CARNET
+                                </button>
+                            </div>
+                        `;
+
+                        div.innerHTML = infoHtml + btnHtml;
+                        contenedor.appendChild(div);
+                    });
+
+                    // Si no hay alumnos, mostrar aviso
+                    if (data.alumnos.length === 0) {
+                        contenedor.innerHTML = '<div style="text-align:center; color:#ff3333; padding:20px;">La lista está vacía.</div>';
+                    }
+                } else {
+                    throw new Error(data.msg || 'Error al obtener la lista');
+                }
+            } catch (err) {
+                titulo.textContent = '❌ ERROR';
+                contenedor.innerHTML = `<div style="text-align:center; color:#ff3333; padding:20px;">
+                    ${err.message.includes('No existe lista') ? 'Debe subir primero la lista de alumnos en el Portal de Listas antes de poder asignar fotos.' : err.message}
+                </div>`;
+            }
+        }
+
+        function cerrarPanelFotos() {
+            document.getElementById('panel-fotos').style.display = 'none';
+            document.getElementById('lista-alumnos-container').innerHTML = '';
+            aulaActiva = null;
+            botonActivo = null;
+            
+            // Volver arriba de forma suave
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => { window.scrollTo(0, 0); }, 500);
+        }
+
+        // Restaurar indicadores verdes de listas subidas consultando al SERVIDOR directamente
+        async function restoreIndicadores() {
+            const codigo = codigoColegioActivo || sessionStorage.getItem('nm_codigo') || '';
+            if (!codigo) return;
+
+            try {
+                const response = await fetch('/api/obtener_estado_grados', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codigo: codigo })
+                });
+                const data = await response.json();
+                
+                if (data.status === 'ok' && data.grados) {
+                    const gradosCompletos = data.grados;
+                    
+                    document.querySelectorAll('.matrix-btn').forEach(btn => {
+                        // Extraer el aula de su onclick
+                        const onc = btn.getAttribute('onclick') || '';
+                        let aulaKey = "";
+                        const match = onc.match(/abrirPanelFotos\(this,\s*'([^']+)'\)/);
+                        if (match) {
+                            aulaKey = match[1];
+                        } else {
+                            // Fallback por si no tiene onclick (generado dinamicamente)
+                            aulaKey = btn.innerText.trim().replace(/ /g, '_').replace(/°/g, 'grado');
+                        }
+
+                        if (gradosCompletos.includes(aulaKey)) {
+                            const fila = btn.closest('.grado-row');
+                            if (fila) {
+                                const indicador = fila.querySelector('.status-indicator');
+                                if (indicador) {
+                                    indicador.className = 'status-indicator status-ok';
+                                    indicador.innerHTML = '<span>✅</span> LISTA SUBIDA';
+                                }
+                                btn.classList.add('btn-ok');
+                            }
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error("Error al sincronizar estado fotos:", err);
+            }
+        }
+
+        // ============================================================
+        //  SISTEMA DE CAPTURA Y ASIGNACIÓN DE IDENTIDAD VISUAL
+        // ============================================================
+        let qrActual = null;
+        let alumnoActual = null;
+        let pBotonRef = null;
+
+        function iniciarCaptura(qr, nombre, btn) {
+            qrActual = qr;
+            alumnoActual = nombre;
+            pBotonRef = btn;
+            
+            // Disparar cámara
+            document.getElementById('camera-input').click();
+        }
+
+        function procesarCaptura(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('modal-foto-titulo').textContent = 'FOTOGRAFÍA: ' + alumnoActual;
+                document.getElementById('modal-foto-preview').src = e.target.result;
+                document.getElementById('modal-foto').style.display = 'flex';
+                // Evitamos doble scroll
+                document.body.style.overflow = 'hidden'; 
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function retomarFoto() {
+            // Limpia el input por si vuelve a fallar y luego abrimos la cámara otra vez
+            document.getElementById('camera-input').value = '';
+            document.getElementById('camera-input').click();
+        }
+
+        function cerrarModalFoto() {
+            document.body.style.overflow = 'auto'; // restaurar scroll global
+            document.getElementById('modal-foto').style.display = 'none';
+            document.getElementById('camera-input').value = '';
+        }
+
+        async function guardarFoto() {
+            const base64Str = document.getElementById('modal-foto-preview').src;
+            const btnSave = document.getElementById('btn-save-foto');
+            
+            btnSave.textContent = '⏳ GUARDANDO...';
+            btnSave.disabled = true;
+
+            try {
+                const payload = {
+                    codigo: codigoColegioActivo || sessionStorage.getItem('nm_codigo') || 'A123',
+                    aula: aulaActiva,
+                    qr: qrActual,
+                    foto_base64: base64Str
+                };
+
+                const response = await fetch('/api/subir_foto', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                if (data.status === 'ok') {
+                    cerrarModalFoto();
+                    
+                    // Modificamos visualmente el botón a verde vivo si no lo estaba
+                    if (pBotonRef) {
+                        pBotonRef.style.background = '#d8ff00';
+                        pBotonRef.style.color = '#001342';
+                        pBotonRef.innerHTML = '✅ FOTO OK';
+                    }
+                } else {
+                    throw new Error(data.msg || 'Error al guardar foto en el servidor.');
+                }
+            } catch (err) {
+                alert('Hubo un error al enviar la imagen: ' + err.message);
+            } finally {
+                btnSave.textContent = '💾 GUARDAR';
+                btnSave.disabled = false;
+            }
+        }
+
+        // ============================================================
+        //  SISTEMA DE CARNET DIGITAL (QR + FOTO)
+        // ============================================================
+        function mostrarCarnet(qr, nombre, tieneFoto) {
+            const modal = document.getElementById('modal-carnet');
+            const imgQr = document.getElementById('carnet-qr');
+            const imgFoto = document.getElementById('carnet-foto');
+            const txtNombre = document.getElementById('carnet-nombre');
+            const txtGrado = document.getElementById('carnet-grado');
+            const txtId = document.getElementById('carnet-id-text');
+
+            txtNombre.textContent = nombre;
+            txtGrado.textContent = (aulaActiva || 'GRADO NO ASIGNADO').replace(/_/g, ' ').toUpperCase();
+            txtId.textContent = qr;
+
+            // Generar QR en tiempo real
+            imgQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${qr}&color=001342`;
+            
+            // Cargar Logo Institucional (v4.7)
+            const imgLogo = document.querySelector('.carnet-logo-img');
+            imgLogo.src = `/api/obtener_logo?codigo=${codigoColegioActivo}&v=${Date.now()}`;
+
+            // Cargar foto si tiene, o avatar por defecto
+            if (tieneFoto) {
+                imgFoto.src = `/api/ver_foto?qr=${qr}&v=${Date.now()}`;
+            } else {
+                imgFoto.src = `https://ui-avatars.com/api/?name=${nombre}&background=f0f0f0&color=001342`;
+            }
+
+            // APLICAR COLORES INSTITUCIONALES (v4.7)
+            document.querySelector('.carnet-edge-top').style.background = `linear-gradient(90deg, ${colorPrimarioActual} 0%, ${colorSecundarioActual} 50%, ${colorPrimarioActual} 100%)`;
+            document.querySelector('.carnet-header').style.backgroundColor = colorPrimarioActual;
+            document.querySelector('.carnet-header').style.borderBottomColor = colorSecundarioActual;
+            document.querySelector('.carnet-photo-box').style.borderColor = colorPrimarioActual;
+            document.querySelector('.carnet-name').style.color = colorPrimarioActual;
+            document.querySelector('.footer-id-number').style.backgroundColor = colorPrimarioActual;
+            document.querySelector('.verified-chip').style.backgroundColor = colorSecundarioActual;
+            document.querySelector('.verified-chip').style.color = colorPrimarioActual;
+
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function cerrarCarnet() {
+            document.getElementById('modal-carnet').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+
+</html>

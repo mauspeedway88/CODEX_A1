@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor Base JSON Infografías</title>
+    <style>
+        /* CSS Integrado y encapsulado */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            /* Background outside container */
+            background-color: #0f172a; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Contenedor Fijo 800x1024 exacto pedido por el usuario */
+        #infographic-container {
+            width: 800px;
+            height: 1024px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            transition: background 0.5s ease, color 0.5s ease;
+            
+            /* Flex layout para prevenir solapamiento */
+            display: flex;
+            flex-direction: column;
+
+            /* Fondo base (será sobrescrito dinámicamente) */
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            color: #ffffff;
+            
+            /* UI Grid de fondo para aspecto tech/educativo */
+            background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        /* Header Layout */
+        .header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex: 0 0 280px; /* Altura Fija sin encogerse */
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .title-container {
+            flex: 1;
+            padding-right: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .info-title {
+            font-size: 52px;
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        .info-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            width: fit-content;
+        }
+
+        .svg-container {
+            width: 250px;
+            height: 250px;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .svg-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Body Area - Columnas Fluidas */
+        .content-area {
+            flex: 1; /* Ocupa todo el espacio medio */
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-content: start; /* Compactar hacia arriba */
+        }
+
+        .section-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 5px solid currentColor;
+            padding: 15px 20px;
+            border-radius: 0 15px 15px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .section-text {
+            font-size: 15px;
+            line-height: 1.5;
+            opacity: 0.85;
+        }
+
+        /* Resumen Final Flexible */
+        .summary-area {
+            flex: 0 0 auto; /* No forzar tamaño fijo, usar el natural */
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            border-radius: 15px;
+            border-top: 2px dashed rgba(255,255,255,0.2);
+        }
+
+        .summary-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            opacity: 0.6;
+            margin-bottom: 10px;
+        }
+
+        .summary-text {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.4;
+            font-style: italic;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <!-- Contenedor maestro 800x1024 -->
+    <div id="infographic-container">
+        <!-- El JS inyectará todo aquí -->
+    </div>
+
+    <!-- Script de Renderizado Dinámico -->
+    <script>
+        // Paletas de color elegantes y de ALTO CONTRASTE garantizado
+        const colorPalettes = [
+            { bg: "linear-gradient(135deg, #1e1b4b, #312e81)", text: "#ffffff" }, // Cosmic Deep Blue
+            { bg: "linear-gradient(135deg, #022c22, #065f46)", text: "#ffffff" }, // Deep Emerald
+            { bg: "linear-gradient(135deg, #4c0519, #9f1239)", text: "#ffffff" }, // Blood Crimson
+            { bg: "linear-gradient(135deg, #2e1065, #581c87)", text: "#f3e8ff" }, // Imperial Purple
+            { bg: "linear-gradient(135deg, #111827, #374151)", text: "#f9fafb" }  // Corporate Carbon (Neutral)
+        ];
+
+        // Función para aplicar paleta al azar
+        function applyRandomPalette() {
+            const container = document.getElementById('infographic-container');
+            const palette = colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
+            container.style.background = palette.bg;
+            container.style.color = palette.text;
+        }
+
+        // Función principal de renderizado
+        async function loadAndRenderInfographic() {
+            try {
+                // Cargamos el JSON
+                const response = await fetch('data_tunel_carpiano.json');
+                const data = await response.json();
+                
+                const container = document.getElementById('infographic-container');
+                
+                // Mapeo seguro de las secciones
+                const sectionsHtml = data.sections.map(sec => `
+                    <div class="section-box">
+                        <div class="section-title">${sec.subtitle}</div>
+                        <div class="section-text">${sec.content}</div>
+                    </div>
+                `).join('');
+
+                // Inyección dinámica
+                container.innerHTML = `
+                    <div class="header-area">
+                        <div class="title-container">
+                            <div class="info-badge">INFOGRAFÍA GENERATIVA</div>
+                            <div class="info-title">${data.title}</div>
+                        </div>
+                        <div class="svg-container">
+                            ${data.svgGraphic}
+                        </div>
+                    </div>
+
+                    <div class="content-area">
+                        ${sectionsHtml}
+                    </div>
+
+                    <div class="summary-area">
+                        <div class="summary-title">RESUMEN MÉDICO</div>
+                        <div class="summary-text">${data.summary}</div>
+                    </div>
+                `;
+
+                // Aplicar paleta randómica
+                applyRandomPalette();
+
+            } catch (error) {
+                console.error("Error cargando la infografía JSON:", error);
+                document.getElementById('infographic-container').innerHTML = `
+                    <h2 style="color:#ff3366; text-align:center; margin-top:400px;">
+                        Error al cargar data_tunel_carpiano.json. Asegúrate de iniciarlo en un Web Server local.
+                    </h2>
+                `;
+            }
+        }
+
+        // Trigger on load
+        window.addEventListener('DOMContentLoaded', loadAndRenderInfographic);
+    </script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netmarlyn - Crear Infografía</title>
+    <link rel="stylesheet" href="style.css?v=8813">
+    <style>
+        .generator-panel {
+            max-width: 500px;
+            margin: 80px auto;
+            text-align: center;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 0 20px;
+        }
+        .mic-area {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #00e5ff;
+            border-radius: 50%;
+            margin: 40px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+            position: relative;
+        }
+        .mic-area.recording {
+            border-color: #ff3d00;
+            box-shadow: 0 0 30px rgba(255, 61, 0, 0.6);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .mic-icon {
+            font-size: 40px;
+        }
+        .status-text {
+            color: #d8ff00;
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-top: 15px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 12px;
+            color: white;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: inherit;
+            font-size: 16px;
+            resize: none;
+            box-sizing: border-box;
+            outline: none;
+        }
+        textarea:focus {
+            border-color: #00e5ff;
+        }
+        .controls-area {
+            margin-top: 30px;
+            display: none; /* Se muestra tras detener la grabación */
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+        .btn-retry {
+            background: #ff3d00;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.3s;
+        }
+        .btn-retry:hover {
+            background: #ff6e40;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="top-bar">
+            <nav class="top-nav">
+                <a href="index.html?v=8813">inicio</a> - 
+                <a href="colegios.html?v=8813">colegios</a> - 
+                <a href="soporte.html?v=8813">soporte</a>
+            </nav>
+            <div class="logo-container">
+                <img src="assets/G_nombrelogo.png" alt="Netmarlyn Logo" style="width: 140px;">
+            </div>
+        </header>
+
+        <section class="generator-panel">
+            <h2 style="letter-spacing: 4px; text-transform: uppercase; color: #00e5ff;">Máquina del Tiempo</h2>
+            <p style="color: #8b9bb4; font-size: 14px;">Graba de 10 a 30 segundos o menciona el tema de la clase.</p>
+            
+            <div class="mic-area" id="mic-btn">
+                <span class="mic-icon" id="mic-icon-sym">🎙️</span>
+            </div>
+            
+            <div class="status-text" id="status">PULSA PARA GRABAR</div>
+
+            <textarea id="output-text" placeholder="Tu voz aparecerá aquí... (o escribe el tema manualmente)"></textarea>
+
+            <div class="controls-area" id="controls">
+                <div class="btn-netmarlyn" id="save-btn">
+                    <img class="btn-bg" src="assets/boton_netmarlyn_general.png" alt="Guardar">
+                    <span><em>GUARDAR</em><em>AUDIO (TEXTO)</em></span>
+                </div>
+                <button class="btn-retry" id="retry-btn">Volver a grabar</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const micBtn = document.getElementById('mic-btn');
+        const micIcon = document.getElementById('mic-icon-sym');
+        const statusText = document.getElementById('status');
+        const outputText = document.getElementById('output-text');
+        const controls = document.getElementById('controls');
+        const saveBtn = document.getElementById('save-btn');
+        const retryBtn = document.getElementById('retry-btn');
+
+        let isRecording = false;
+        let recognition = null;
+
+        // Soporte Extendido para Speech Recognition
+        const SpeechRecognition = window.SpeechRecognition || 
+                                  window.webkitSpeechRecognition || 
+                                  window.mozSpeechRecognition || 
+                                  window.msSpeechRecognition || 
+                                  window.oSpeechRecognition;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'es-ES';
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onstart = () => {
+                console.log("Reconocimiento iniciado");
+            };
+
+            recognition.onresult = (event) => {
+                let finalTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    }
+                }
+                if (finalTranscript) {
+                    // Limpiar y append si queremos conservar, o reemplazar
+                    outputText.value = finalTranscript;
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Speech Error:", event.error);
+                if (event.error === 'not-allowed') {
+                    alert("Permiso de micrófono denegado. Por favor, actívalo en tu navegador.");
+                    statusText.innerText = "PERMISO DENEGADO";
+                } else if (event.error === 'no-speech') {
+                    statusText.innerText = "NO SE DETECTÓ VOZ";
+                } else {
+                    statusText.innerText = "ERROR: " + event.error.toUpperCase();
+                }
+                stopRecording();
+            };
+
+            recognition.onend = () => {
+                if (isRecording) {
+                    // Reiniciar si se detiene accidentalmente durante grabación
+                    recognition.start();
+                }
+            };
+        } else {
+            statusText.innerHTML = "ESTE NAVEGADOR NO SOPORTA VOZ.<br><small>Usa Chrome o Edge para mejores resultados.</small>";
+            micBtn.style.opacity = "0.3";
+            micBtn.style.cursor = "not-allowed";
+        }
+
+        async function startRecording() {
+            try {
+                isRecording = true;
+                micBtn.classList.add('recording');
+                micIcon.innerText = "⏹️";
+                statusText.innerText = "GRABANDO... HABLE AHORA";
+                statusText.style.color = "#ff3d00";
+                controls.style.display = "none";
+                
+                if (recognition) recognition.start();
+            } catch (err) {
+                console.error("Speech recognition error:", err);
+                alert("Debes permitir el acceso al micrófono en tu navegador para grabar.");
+                statusText.innerText = "ERROR DE ACCESO AL MICRO";
+                stopRecording();
+            }
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            micBtn.classList.remove('recording');
+            micIcon.innerText = "🎙️";
+            statusText.innerText = "GRABACIÓN FINALIZADA";
+            statusText.style.color = "#d8ff00";
+            controls.style.display = "flex";
+            if (recognition) recognition.stop();
+        }
+
+        micBtn.onclick = () => {
+            if (!recognition) return;
+            if (!isRecording) startRecording();
+            else stopRecording();
+        };
+
+        retryBtn.onclick = () => {
+            outputText.value = "";
+            controls.style.display = "none";
+            statusText.innerText = "PULSA PARA GRABAR";
+            statusText.style.color = "#d8ff00";
+        };
+
+        saveBtn.onclick = async () => {
+            const finalTopic = outputText.value.trim();
+            if (!finalTopic) {
+                alert("Por favor, graba o escribe un tema primero.");
+                return;
+            }
+
+            // ... (resto de la lógica de guardado igual)
+            statusText.innerText = "OBTENIENDO GPS...";
+            
+            // 1. GENERACIÓN LOCAL INSTANTÁNEA (VISTA PREVIA DE LA IA PARA LA AUDIENCIA)
+            const previewBox = document.getElementById('instant-preview');
+            const previewContent = document.getElementById('preview-box');
+            
+            previewBox.style.display = 'block';
+            previewContent.innerHTML = `
+                <div style="background:#001342; border:2px solid #00e5ff; border-radius:12px; padding:20px; position:relative; overflow:hidden;">
+                    <svg width="100%" height="300" viewBox="0 0 300 400">
+                        <defs>
+                            <linearGradient id="gradIA" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#001342;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#003bbf;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="300" height="400" fill="url(#gradIA)" />
+                        <text x="50%" y="40" font-size="20" fill="#00e5ff" text-anchor="middle" font-family="Arial" font-weight="bold">INFOGRAFÍA IA</text>
+                        <text x="20" y="80" font-size="12" fill="#8b9bb4" font-family="Arial">TEMA: ${finalTopic.substring(0,30)}...</text>
+                        <circle cx="150" cy="200" r="50" fill="none" stroke="#00e5ff" stroke-width="2" />
+                        <text x="150" y="205" font-size="10" fill="#00e5ff" text-anchor="middle">CREANDO...</text>
+                        <rect x="20" y="300" width="260" height="80" rx="5" fill="rgba(255,255,255,0.05)" />
+                        <foreignObject x="30" y="310" width="240" height="60">
+                            <div style="color:white; font-size:9px; font-family:Arial; line-height:1.2;">
+                                <b>RESUMEN:</b> ${finalTopic.substring(0,250)}...
+                            </div>
+                        </foreignObject>
+                    </svg>
+                </div>
+            `;
+
+            // 2. ENVÍO LIGERO (SOLO TEXTO)
+            statusText.innerText = "ENVIANDO TEMA...";
+            const payload = {
+                texto: finalTopic,
+                colegio: "DEMO_AUDIENCIA_LIVE"
+            };
+
+            try {
+                const response = await fetch('/api/peticion_infografia', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                // MODO AUDIENCIA: No bloqueamos si el servidor falla, la preview es lo importante
+                statusText.innerText = "¡MÁQUINA DEL TIEMPO LISTA!";
+                statusText.style.color = "#00e5ff";
+                
+                saveBtn.onclick = () => { window.location.href = "ver_infografias.html?v=8813"; };
+                saveBtn.querySelector('span').innerHTML = "<em>VER</em><em>GALERIA</em>";
+                
+            } catch (err) {
+                console.warn("Offline demo mode enabled.");
+                statusText.innerText = "LISTO (LOCAL PREVIEW)";
+            }
+        };
+    </script>
+    
+    <div id="instant-preview" style="display:none; margin: 40px auto; max-width: 400px;">
+        <p style="color:#00e5ff; font-size:14px; margin-bottom:15px; letter-spacing:2px; font-weight:bold;">✨ VISTA PREVIA INSTANTÁNEA (IA):</p>
+        <div id="preview-box"></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netmarlyn - Portal del Director (Ingesta)</title>
+    <!-- Mismos estilos de la estructura general -->
+    <link rel="stylesheet" href="style.css?v=10">
+    <style>
+        /* Estilos Exclusivos del Admin Portal */
+        .admin-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: rgba(0, 50, 150, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            text-align: center;
+        }
+
+        .admin-header h1 {
+            color: #00e5ff;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .admin-header p {
+            color: #88c0d0;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        .matrix-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .grade-btn {
+            background-color: #ff3333; /* ROJO: Faltan Datos */
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.4);
+        }
+
+        .grade-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .grade-btn.green {
+            background-color: #00e5ff; /* VERDE: Listo */
+            color: #001342;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+        }
+
+        /* El Cajón Mágico / Modal */
+        #magic-box-modal {
+            display: none;
+            background-color: #001342;
+            border: 2px solid #00e5ff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            text-align: left;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+        }
+
+        #magic-box-modal h3 {
+            color: white;
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+        
+        #magic-box-modal p {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 250px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid #444;
+            color: white;
+            padding: 15px;
+            font-size: 1rem;
+            border-radius: 8px;
+            resize: none;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #00e5ff;
+            background-color: rgba(0, 229, 255, 0.05);
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            background: linear-gradient(90deg, #0088cc, #00e5ff);
+            color: #001342;
+            font-size: 1.1rem;
+            font-weight: 900;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: box-shadow 0.3s;
+        }
+
+        .action-btn:hover {
+            box-shadow: 0 0 20px #00e5ff;
+        }
+
+        #success-msg {
+            display: none;
+            color: #00e5ff;
+            font-weight: bold;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+    </style>
+    <script src="js/nav_active.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Reutilizamos el Navbar base de Netmarlyn -->
+        <header class="top-bar">
+            <nav class="top-nav">
+                <a href="index.html">inicio</a> - 
+                <a href="colegios.html">colegios</a> - 
+                <a href="soporte.html">soporte</a>
+            </nav>
+            <div class="logo-container">
+                <img id="main-logo" src="assets/G_nombrelogo.png" alt="Netmarlyn Logo">
+            </div>
+        </header>
+
+        <section class="admin-container">
+            <div class="admin-header">
+                <h1>Panel de Ingesta Inteligente</h1>
+                <p>Colegio: <strong>Liceo San Juan Bautista</strong> | Sesión validada por 5 días.</p>
+            </div>
+
+            <!-- La Matriz visual que el usuario planeó -->
+            <h3 style="text-align: left; color: white;">SELECCIONE EL AULA A INGRESAR:</h3>
+            <div class="matrix-container" id="matrix">
+                <button class="grade-btn" onclick="abrirCajon(this, '1ro A')">1º Grado - A</button>
+                <button class="grade-btn" onclick="abrirCajon(this, '1ro B')">1º Grado - B</button>
+                <button class="grade-btn" onclick="abrirCajon(this, '2do A')">2º Grado - A</button>
+                <button class="grade-btn" onclick="abrirCajon(this, '2do B')">2º Grado - B</button>
+                <button class="grade-btn" onclick="abrirCajon(this, '3ro A')">3º Grado - A</button>
+                <!-- Uno ya puesto en verde para que se vea el progreso -->
+                <button class="grade-btn green" onclick="alert('Esta sección ya está validada completamente.')">3º Grado - B (Listo)</button>
+            </div>
+
+            <!-- El "Cajón Mágico" de Copiar y Pegar -->
+            <div id="magic-box-modal">
+                <h3 id="cajon-titulo">Ingresando lista para: [Aula]</h3>
+                <p>Vaya a su documento (Excel, Word, TXT), sombree los nombres de los alumnos de esta aula, cópielos y péguelos bajo esta línea. No se preocupe por el orden o números.</p>
+                
+                <textarea id="lista-raw" placeholder="1. PEREZ JUAN
+2. GOMEZ MARIA
+3. LOPEZ CARLOS..."></textarea>
+                
+                <button class="action-btn" onclick="simularTrituradora()">Analizar y Subir Lista (IA)</button>
+                <div id="success-msg">✅ ¡Éxito! 24 Alumnos detectados. Códigos QR Asignados y Base de Datos Actualizada.</div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- Lógica de Simulación de la Interfaz -->
+    <script>
+        let botonActivo = null;
+
+        function abrirCajon(elemento, nombreAula) {
+            // Limpiamos todo
+            document.getElementById('lista-raw').value = '';
+            document.getElementById('success-msg').style.display = 'none';
+            document.getElementById('magic-box-modal').style.display = 'block';
+            
+            // Actualizamos Título
+            document.getElementById('cajon-titulo').innerText = "Ingresando lista para: " + nombreAula + " (Matutino)";
+            
+            // Guardamos el botón exacto que tocó para luego pintarlo verde
+            botonActivo = elemento;
+            
+            // Bajamos visualmente la pantalla
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function simularTrituradora() {
+            let texto = document.getElementById('lista-raw').value;
+            if(texto.trim() === '') {
+                alert("Por favor peque el texto de la lista primero.");
+                return;
+            }
+
+            // Cambiamos el texto del botón simulando la IA pensando
+            let btn = document.querySelector('.action-btn');
+            btn.innerText = "Pensando... Asignando QR...";
+            btn.style.boxShadow = "0 0 50px #00e5ff";
+            
+            // A los 1.5 segundos se termina el proceso
+            setTimeout(() => {
+                document.getElementById('success-msg').style.display = 'block';
+                btn.innerText = "Analizar y Subir Lista (IA)";
+                btn.style.boxShadow = "none";
+                
+                // Magia: Convertimos el botón escolar ROJO a VERDE
+                if(botonActivo) {
+                    botonActivo.classList.add('green');
+                    botonActivo.innerText = botonActivo.innerText + " (Listo)";
+                    botonActivo.onclick = function() { alert('Esta sección ya está validada completamente.'); };
+                }
+                
+                // Ocultamos el cajón después de unos segundos para seguir trabajando
+                setTimeout(() => {
+                    document.getElementById('magic-box-modal').style.display = 'none';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 3000);
+
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

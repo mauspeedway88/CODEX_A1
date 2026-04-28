@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía: Sistema Circulatorio</title>
+    <style>
+        :root {
+            --bg-color: #e0e0e0;
+            /* Gris */
+            --primary: #d32f2f;
+            /* Rojo arteria */
+            --secondary: #1976d2;
+            /* Azul vena */
+            --text-dark: #333;
+            --card-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            margin: 0;
+            padding: 2rem;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .infografia-container {
+            max-width: 1000px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .grid-isometrica {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .card-isometrica {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card-isometrica:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .svg-container {
+            width: 160px;
+            height: 160px;
+            margin-bottom: 1.5rem;
+            /* Añadimos un leve efecto de flotación para que parezca más 3D */
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .card-isometrica:nth-child(2) .svg-container {
+            animation-delay: -1.5s;
+        }
+
+        .card-isometrica:nth-child(3) .svg-container {
+            animation-delay: -3s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+            text-transform: uppercase;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #555;
+            flex-grow: 1;
+        }
+
+        .data-badge {
+            margin-top: 1.5rem;
+            background: #f5f5f5;
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 0.95rem;
+            border: 1px solid #ddd;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="infografia-container">
+        <div class="header">
+            <h1>Sistema Circulatorio</h1>
+            <p>La red de transporte vital del cuerpo humano encargada de llevar oxígeno, nutrientes y hormonas a cada
+                célula.</p>
+        </div>
+
+        <div class="grid-isometrica">
+            <!-- Tarjeta 1: El Corazón -->
+            <div class="card-isometrica">
+                <div class="svg-container">
+                    <!-- SVG Isométrico Construido Manualmente (Corazón / Bomba) -->
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(100, 120) scale(1.3)">
+                            <!-- Base principal del motor/corazón -->
+                            <polygon points="0,0 30,-15 0,-30 -30,-15" fill="#b71c1c" /> <!-- Cara superior baja -->
+                            <polygon points="-30,-15 0,0 0,30 -30,15" fill="#d32f2f" /> <!-- Cara izquierda -->
+                            <polygon points="0,0 30,-15 30,15 0,30" fill="#f44336" /> <!-- Cara derecha -->
+
+                            <!-- Tubo 1: Aorta (Rojo más claro) -->
+                            <polygon points="5,-25 15,-30 5,-35 -5,-30" fill="#c62828" />
+                            <polygon points="-5,-30 5,-25 5,-5 -5,-10" fill="#d32f2f" />
+                            <polygon points="5,-25 15,-30 15,-10 5,-5" fill="#ff5252" />
+
+                            <!-- Tubo 2: Vena Cava (Azul) -->
+                            <polygon points="-15,-20 -5,-25 -15,-30 -25,-25" fill="#0d47a1" />
+                            <polygon points="-25,-25 -15,-20 -15,0 -25,-5" fill="#1976d2" />
+                            <polygon points="-15,-20 -5,-25 -5,-5 -15,0" fill="#42a5f5" />
+                        </g>
+                    </svg>
+                </div>
+                <h2 class="card-title">El Corazón</h2>
+                <p class="card-text">Una bomba muscular hueca que late más de 100,000 veces al día, impulsando sangre a
+                    través de miles de kilómetros de vasos sanguíneos en todo el cuerpo.</p>
+                <div class="data-badge">Volumen: ~5 Litros / min</div>
+            </div>
+
+            <!-- Tarjeta 2: Red de Vasos -->
+            <div class="card-isometrica">
+                <div class="svg-container">
+                    <!-- SVG Isométrico (Arterias y Venas entrelazadas) -->
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(100, 100) scale(1.4)">
+                            <!-- Tubo Arterial Principal (Rojo) cruzando de izquierda a derecha en perspectiva -->
+                            <polygon points="-30,10 -15,15 30,-10 15,-15" fill="#b71c1c" /> <!-- Base -->
+                            <polygon points="-30,10 -15,15 -15,5 -30,0" fill="#f44336" /> <!-- Frente -->
+                            <polygon points="-15,15 30,-10 30,-20 -15,5" fill="#d32f2f" /> <!-- Lateral -->
+
+                            <!-- Tubo Venoso Principal (Azul) cruzando por debajo -->
+                            <polygon points="-20,-15 -5,-10 20,5 5,0" fill="#0d47a1" />
+                            <polygon points="-20,-15 -5,-10 -5,-20 -20,-25" fill="#42a5f5" />
+                            <polygon points="-5,-10 20,5 20,-5 -5,-20" fill="#1976d2" />
+
+                            <!-- Red capilar (líneas flotantes conectando) -->
+                            <path d="M 0,-5 L 10,5 M 5,-8 L 15,2 M 10,-11 L 20,-1" stroke="#9c27b0" stroke-width="2"
+                                stroke-linecap="round" opacity="0.7" />
+                        </g>
+                    </svg>
+                </div>
+                <h2 class="card-title">Vasos Sanguíneos</h2>
+                <p class="card-text">Las <b>Arterias</b> transportan sangre rica en oxígeno lejos del corazón. Las
+                    <b>Venas</b> devuelven la sangre desoxigenada. Los capilares conectan ambos sistemas.</p>
+                <div class="data-badge">Longitud Total: ~100,000 km</div>
+            </div>
+
+            <!-- Tarjeta 3: Células Sanguíneas -->
+            <div class="card-isometrica">
+                <div class="svg-container">
+                    <!-- SVG Isométrico (Glóbulos flotando) -->
+                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(100, 110) scale(1.4)">
+                            <!-- Glóbulo Rojo 1 (Cilindro bicóncavo simplificado) -->
+                            <g transform="translate(-15, 5)">
+                                <path d="M -15,0 C -15,8 15,8 15,0 L 15,-5 C 15,3 -15,3 -15,-5 Z" fill="#b71c1c" />
+                                <ellipse cx="0" cy="-5" rx="15" ry="7.5" fill="#ef5350" />
+                                <ellipse cx="0" cy="-5" rx="7" ry="3.5" fill="#c62828" />
+                            </g>
+
+                            <!-- Glóbulo Rojo 2 (Más atrás y arriba) -->
+                            <g transform="translate(15, -15) scale(0.8)">
+                                <path d="M -15,0 C -15,8 15,8 15,0 L 15,-5 C 15,3 -15,3 -15,-5 Z" fill="#b71c1c" />
+                                <ellipse cx="0" cy="-5" rx="15" ry="7.5" fill="#ef5350" />
+                                <ellipse cx="0" cy="-5" rx="7" ry="3.5" fill="#c62828" />
+                            </g>
+
+                            <!-- Glóbulo Blanco (Esferita isométrica) -->
+                            <g transform="translate(10, 20)">
+                                <circle cx="0" cy="0" r="10" fill="#cfd8dc" />
+                                <circle cx="-3" cy="-3" r="3" fill="#ffffff" opacity="0.9" />
+                                <circle cx="4" cy="2" r="1.5" fill="#90a4ae" />
+                                <circle cx="-4" cy="4" r="1" fill="#90a4ae" />
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+                <h2 class="card-title">Comodato Sanguíneo</h2>
+                <p class="card-text">Formada por glóbulos rojos (O2), glóbulos blancos (defensas) y plaquetas
+                    (coagulación), todss suspendidos en un líquido amarillento llamado plasma.</p>
+                <div class="data-badge">Producción: ~2 Millones / seg</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

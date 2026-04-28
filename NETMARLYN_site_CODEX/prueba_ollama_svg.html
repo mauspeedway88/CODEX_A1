@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demostración Ollama - Bocetos Lineales Vectoriales</title>
+    <style>
+        body {
+            background-color: #001342;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #00e5ff;
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        p {
+            color: #8b9bb4;
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .grid-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+        }
+        .canvas-box {
+            background: rgba(0, 229, 255, 0.05);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
+        }
+        .canvas-box h2 {
+            font-size: 18px;
+            color: #00e5ff;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* 
+         * LA MAGIA DE LA ANIMACIÓN LINEAR (Hand-drawn CSS effect) 
+         */
+        svg {
+            width: 200px;
+            height: 200px;
+            overflow: visible;
+        }
+        
+        path, circle, polyline {
+            fill: none;
+            stroke: #00e5ff;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            
+            /* Preparación para el dibujo animado */
+            stroke-dasharray: 600;
+            stroke-dashoffset: 600;
+            animation: drawSkeleton 3s ease-out forwards;
+            
+            /* Filtro aplicado para dar el toque de "lápiz rugoso o sketch" */
+            filter: url(#pencil-texture);
+        }
+
+        /* Variables de retraso para que no todo se dibuje al mismo tiempo */
+        path:nth-child(2) { animation-delay: 0.5s; }
+        path:nth-child(3) { animation-delay: 1.0s; }
+        path:nth-child(4) { animation-delay: 1.5s; }
+        path:nth-child(5) { animation-delay: 2.0s; }
+
+        @keyframes drawSkeleton {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .btn-replay {
+            margin-top: 50px;
+            padding: 12px 30px;
+            background-color: transparent;
+            border: 2px solid #00e5ff;
+            color: #00e5ff;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .btn-replay:hover {
+            background-color: #00e5ff;
+            color: #001342;
+            box-shadow: 0 0 20px #00e5ff;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Motor Universal de Boceto Lineal</h1>
+    <p>Estos 3 gráficos no existen como imágenes. Son pura matemática de curvas de Bézier (C y Q) generadas estructuradas como si fuesen emitidas por un LLM Local (Ollama) en tiempo real.</p>
+
+    <!-- Filtro de Sketch/Lápiz Global -->
+    <svg style="width:0; height:0; position:absolute;">
+        <filter id="pencil-texture" x="-10%" y="-10%" width="120%" height="120%">
+            <!-- Crea un ruido turbulento -->
+            <feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="3" result="noise" />
+            <!-- Desplaza ligeramente los trazos basados en el ruido para fingir imperfección manual -->
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </svg>
+
+    <div class="grid-container">
+        
+        <!-- 1. OBJETO MECÁNICO: CARRO -->
+        <div class="canvas-box">
+            <h2>El Carro</h2>
+            <svg viewBox="0 0 100 100">
+                <!-- Chasis Base -->
+                <path d="M 10 70 L 25 70 M 45 70 L 65 70 M 85 70 L 95 70" />
+                <!-- Llantas con curvas -->
+                <path d="M 25 70 C 25 55 45 55 45 70" />
+                <path d="M 65 70 C 65 55 85 55 85 70" />
+                <!-- Carrocería fluida -->
+                <path d="M 10 70 C 5 70 5 60 10 55 C 20 50 35 35 45 35 C 65 35 80 50 90 55 C 95 55 95 70 95 70" />
+                <!-- Ventanas -->
+                <path d="M 45 35 C 35 35 25 50 20 55 L 45 55 Z" />
+                <path d="M 45 35 C 60 35 70 50 75 55 L 45 55 Z" />
+            </svg>
+        </div>
+
+        <!-- 2. OBJETO ORGÁNICO: ÁRBOL -->
+        <div class="canvas-box">
+            <h2>El Árbol</h2>
+            <svg viewBox="0 0 100 100">
+                <!-- Tronco -->
+                <path d="M 45 95 Q 45 60 50 50 Q 55 60 55 95" />
+                <!-- Copa de Hojas (Curvas continuas Bézier) -->
+                <path d="M 50 50 C 20 50 10 20 50 10 C 90 20 80 50 50 50" />
+                <!-- Ramificaciones internas fluidas -->
+                <path d="M 50 50 Q 30 40 25 25" />
+                <path d="M 50 50 Q 65 35 75 30" />
+                <!-- Detalles de corteza -->
+                <path d="M 48 70 Q 50 65 48 60" />
+            </svg>
+        </div>
+
+        <!-- 3. OBJETO COTIDIANO: ZAPATO -->
+        <div class="canvas-box">
+            <h2>El Zapato</h2>
+            <svg viewBox="0 0 100 100">
+                <!-- Suela curva -->
+                <path d="M 15 80 C 40 85 70 85 90 80" />
+                <!-- Talón -->
+                <path d="M 15 80 Q 10 65 20 50" />
+                <!-- Contorno superior y Punta -->
+                <path d="M 20 50 C 40 50 55 45 70 65 C 80 75 90 70 90 80" />
+                <!-- Lengüeta y Cuello -->
+                <path d="M 20 50 Q 30 40 45 50" />
+                <!-- Agujetas/Cordones -->
+                <path d="M 40 55 L 45 60 M 48 52 L 53 58 M 55 50 L 60 56" />
+            </svg>
+        </div>
+
+    </div>
+
+    <button class="btn-replay" onclick="location.reload()">Ver Animación de Nuevo</button>
+
+</body>
+</html>
