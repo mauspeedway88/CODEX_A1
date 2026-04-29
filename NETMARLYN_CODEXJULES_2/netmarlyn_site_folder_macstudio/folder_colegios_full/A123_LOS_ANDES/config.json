@@ -1,0 +1,9 @@
+{
+    "id": "A123",
+    "nombre": "Colegio Los Andes (Legacy)",
+    "gps": {"lat": "0", "lon": "0"},
+    "niveles": ["parvularia", "basica"],
+    "contacto": "legacy@ejemplo.com",
+    "fecha_registro": "2026-03-15 10:00:00",
+    "password_portal": "pepino1"
+}

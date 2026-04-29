@@ -1,8 +1,0 @@
-::1 - - [10/Apr/2026 22:26:55] "GET / HTTP/1.1" 304 -
-::1 - - [10/Apr/2026 22:26:55] "GET /gesture_engine.js?v=1775881615479 HTTP/1.1" 200 -
-::1 - - [10/Apr/2026 22:26:55] "GET /main.js?v=1775881615486 HTTP/1.1" 200 -
-::1 - - [10/Apr/2026 22:26:55] "GET /MAUNET_IDENTITY.json?v=1775881615492 HTTP/1.1" 200 -
-::1 - - [10/Apr/2026 22:26:55] "GET /emojis_spanish.json?v=1775881615492 HTTP/1.1" 200 -
-::1 - - [10/Apr/2026 22:26:55] "GET /maunet.gltf?v=1775881615492 HTTP/1.1" 200 -
-::1 - - [10/Apr/2026 22:26:55] "GET /emojis_english.json?v=1775881615492 HTTP/1.1" 200 -
-::1 - - [10/Apr/2026 22:27:17] "GET /iconos_messenger_full/messenger-1f9e0.svg HTTP/1.1" 304 -

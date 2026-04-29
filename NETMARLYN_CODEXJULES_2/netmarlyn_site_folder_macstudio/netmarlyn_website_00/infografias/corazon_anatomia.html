@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía: Anatomía del Motor Humano</title>
+    <style>
+        :root {
+            --bg-color: #0d0f12;
+            /* Negro muy profundo azulado */
+            --text-main: #f0f3f6;
+            /* Blanco hueso */
+            --text-muted: #8b9bb4;
+            /* Gris azulado apagado */
+            --accent-red: #ff3344;
+            /* Rojo arterial */
+            --accent-blue: #0088ff;
+            /* Azul venoso */
+            --accent-gold: #ffaa00;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px 0;
+            background-color: #050608;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            font-family: 'Inter', -apple-system, sans-serif;
+            overflow-y: auto;
+        }
+
+        .infografia-canvas {
+            width: 500px;
+            min-height: 700px;
+            height: auto;
+            background-color: var(--bg-color);
+            position: relative;
+            box-shadow: 0 0 80px rgba(255, 51, 68, 0.08);
+            /* Resplandor rojo sutil */
+            border: 1px solid rgba(255, 51, 68, 0.1);
+            background-image: radial-gradient(circle at 100% 0%, rgba(255, 51, 68, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(0, 136, 255, 0.05) 0%, transparent 50%);
+            padding-bottom: 40px;
+        }
+
+        .content {
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .header h1 {
+            color: var(--text-main);
+            font-size: 2.1rem;
+            font-weight: 900;
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-left: 5px solid var(--accent-red);
+            padding-left: 15px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin: 0 0 25px 0;
+            font-weight: 500;
+            padding-left: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .seccion-grafico {
+            margin-bottom: 45px;
+            clear: both;
+        }
+
+        .grafico-wrap-flotante {
+            float: right;
+            /* Flotando a la derecha esta vez */
+            width: 250px;
+            height: 280px;
+            margin: -10px -10px 10px 20px;
+            shape-outside: polygon(100% 0, 0 0, 10% 40%, 15% 100%, 100% 100%);
+            position: relative;
+        }
+
+        .grafico-wrap-bloque {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            height: 220px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .svg-ultra-realista {
+            width: 100%;
+            height: 100%;
+            display: block;
+            filter: drop-shadow(0 25px 25px rgba(0, 0, 0, 0.8));
+        }
+
+        .texto-rodeando {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        .texto-rodeando b {
+            color: var(--text-main);
+        }
+
+        .texto-rodeando .rojo {
+            color: var(--accent-red);
+            font-weight: bold;
+        }
+
+        .texto-rodeando .azul {
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        .tag {
+            position: absolute;
+            background: rgba(10, 12, 15, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #eee;
+            padding: 5px 10px;
+            font-size: 0.70rem;
+            font-weight: bold;
+            border-radius: 6px;
+            backdrop-filter: blur(5px);
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .separador {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            margin: 40px 0;
+            clear: both;
+        }
+
+        /* Líneas conectoras para los tags (CSS puro) */
+        .linea-tag {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: 5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="infografia-canvas">
+        <div class="content">
+
+            <div class="header">
+                <h1>El Doble Motor</h1>
+                <p>Anatomía Interna del Corazón Humano</p>
+            </div>
+
+            <!-- GRÁFICO 1: CORTE TRANSVERSAL DEL CORAZÓN (Flotante) -->
+            <div class="seccion-grafico">
+                <div class="grafico-wrap-flotante">
+
+                    <div class="tag" style="top: 15%; left: 0%; border-left: 2px solid var(--accent-blue);">Aurícula
+                        Derecha</div>
+                    <div class="linea-tag"
+                        style="top: 22%; left: 35%; width: 40px; height: 1px; transform: rotate(15deg);"></div>
+
+                    <div class="tag" style="top: 45%; right: 5%; border-right: 2px solid var(--accent-red);">Ventrículo
+                        Izq.</div>
+
+                    <div class="tag" style="bottom: 10%; left: 0%; border-bottom: 2px solid #ccc;">Septo (Pared)</div>
+
+                    <!-- SVG ULTRA REALISTA LOW POLY -->
+                    <svg class="svg-ultra-realista" viewBox="0 0 500 550" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <filter id="interior-glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="15" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                            </g>
+                        </defs>
+
+                        <!-- Sombras base -->
+                        <path d="M 150,150 L 350,150 L 400,350 L 250,500 L 100,350 Z" fill="#000" opacity="0.5"
+                            filter="blur(20px)" />
+
+                        <!-- CORTEZA MUSCULAR (MIOCARDIO EXTERNO E INTERIOR) -->
+                        <!-- Pared Ventrículo Izquierdo (Músculo muy grueso) - Rojo oscuro carnoso -->
+                        <polygon points="250,480 360,350 360,250 380,240 400,350 250,520 230,500" fill="#3a1111" />
+                        <polygon points="250,480 340,360 360,350" fill="#4a1515" />
+                        <polygon points="340,360 360,250 360,350" fill="#5c1919" />
+                        <polygon points="360,250 380,240 400,350 360,350" fill="#2d0b0b" />
+                        <polygon points="250,480 360,350 340,360 270,450" fill="#6b1d1d" />
+                        <polygon points="270,450 340,360 310,380 280,430" fill="#7a2020" />
+                        <!-- Highlight de corteza -->
+
+                        <!-- Pared Ventrículo Derecho (Músculo más delgado) -->
+                        <polygon points="250,480 230,500 120,350 140,240 160,250 140,360" fill="#2b1b22" />
+                        <polygon points="250,480 140,360 160,370" fill="#38212a" />
+                        <polygon points="140,360 160,250 160,370" fill="#452733" />
+                        <polygon points="250,480 160,370 190,440" fill="#522f3d" />
+                        <polygon points="160,250 140,240 120,350 140,360" fill="#1b1116" />
+
+                        <!-- SEPTO INTERVENTRICULAR (Pared central separando las cavidades) -->
+                        <polygon points="250,480 280,430 250,280 210,320 210,440" fill="#3a1111" />
+                        <polygon points="250,480 210,440 230,470" fill="#4a1515" />
+                        <polygon points="210,440 210,320 180,360" fill="#5c1919" />
+                        <polygon points="250,280 210,320 280,430" fill="#4a1515" />
+                        <polygon points="250,280 280,430 300,380" fill="#6b1d1d" />
+
+                        <!-- CAVIDAD IZQUIERDA (Ventrículo y Aurícula - Sangre Oxigenada ROJA BRILLANTE) -->
+                        <polygon points="280,430 310,380 340,360 270,450" fill="#aa0000" filter="url(#interior-glow)"
+                            opacity="0.6" />
+                        <!-- Fondo de la cavidad -->
+                        <polygon points="250,280 360,250 340,360 310,380 280,430" fill="#1a0000" />
+                        <polygon points="250,280 300,320 340,360 310,380 280,430" fill="#330000" />
+                        <polygon points="250,280 360,250 300,320" fill="#4d0000" />
+                        <!-- Músculos papilares y cuerdas tendinosas (Blanco/Gris amarillento) -->
+                        <polygon points="310,380 320,370 330,390" fill="#8c7373" /> <!-- Pilar -->
+                        <polygon points="320,370 290,290 285,295" fill="#d1cccc" /> <!-- Cuerda -->
+                        <polygon points="320,370 340,280 335,285" fill="#e3dede" /> <!-- Cuerda -->
+
+                        <!-- CAVIDAD DERECHA (Ventrículo y Aurícula - Sangre Desoxigenada AZUL PROFUNDO) -->
+                        <polygon points="210,440 190,440 160,370 180,360" fill="#001133" filter="url(#interior-glow)"
+                            opacity="0.6" />
+                        <!-- Fondo cavidad -->
+                        <polygon points="250,280 210,320 180,360 160,370 160,250 200,240" fill="#00091a" />
+                        <polygon points="210,320 180,360 200,310 220,300" fill="#001a4d" />
+                        <polygon points="160,250 200,240 220,300 200,310 160,370" fill="#002b80" />
+                        <!-- Músculos papilares derecha -->
+                        <polygon points="180,360 190,350 170,370" fill="#666b73" />
+                        <polygon points="190,350 180,270 175,275" fill="#b0b5bd" />
+                        <polygon points="190,350 220,260 225,265" fill="#c3c8cf" />
+
+                        <!-- VÁLVULAS (Blanco Marfil simulando tejido) -->
+                        <!-- Válvula Mitral (Izquierda) -->
+                        <polygon points="285,295 290,290 350,270 340,280" fill="#f4f1ea" />
+                        <polygon points="285,295 250,280 300,260 350,270" fill="#e8e3d8" />
+                        <!-- Válvula Tricúspide (Derecha) -->
+                        <polygon points="175,275 180,270 240,250 220,260" fill="#f4f1ea" />
+                        <polygon points="175,275 160,250 200,240 240,250" fill="#dbd6cb" />
+
+                        <!-- GRANDES VASOS SUPERIORES (AORTA Y ARTERIA PULMONAR) -->
+                        <!-- Aorta (Rojo Intenso) saliendo del fondo izquierdo -->
+                        <polygon points="300,260 280,240 250,250 310,180 340,190" fill="#b30000" />
+                        <polygon points="310,180 340,190 350,150 320,130" fill="#d90000" />
+                        <polygon points="340,190 350,150 380,170 360,200" fill="#ff1a1a" />
+                        <!-- Cayado aórtico (curva) -->
+                        <polygon points="320,130 350,150 290,100 250,110" fill="#ff3333" />
+                        <polygon points="290,100 250,110 210,140 230,160" fill="#cc0000" />
+                        <!-- Tubitos saliendo de la aorta -->
+                        <polygon points="280,105 290,100 295,50 275,55" fill="#ff1a1a" />
+                        <polygon points="315,120 325,110 340,60 320,70" fill="#d90000" />
+
+                        <!-- Arteria Pulmonar (Azul) cruzando por delante de la aorta -->
+                        <polygon points="200,240 240,250 280,190 230,180" fill="#0044cc" />
+                        <polygon points="280,190 230,180 260,130 310,140" fill="#0055ff" />
+                        <polygon points="280,190 310,140 330,170 300,200" fill="#003399" />
+                        <!-- Ramificación izquierda pulmonar -->
+                        <polygon points="260,130 310,140 360,110 320,100" fill="#0066ff" />
+
+                        <!-- Vena Cava Superior (Azul oscuro profundo) detrás -->
+                        <polygon points="180,160 220,150 200,80 160,90" fill="#001a4d" />
+                        <polygon points="220,150 200,80 230,70 240,130" fill="#002b80" />
+                        <polygon points="180,160 160,250 200,240 220,150" fill="#00091a" /> <!-- Entrada aurícula -->
+
+                        <!-- FLECHAS DE FLUJO SANGUÍNEO (Animadas ópticamente con colores vibrantes) -->
+                        <!-- Flujo Venoso (Entra derecho, baja, sale a pulmones) -->
+                        <polyline points="210,100 190,180 190,230" fill="none" stroke="#00d4ff" stroke-width="4"
+                            stroke-dasharray="10,5" opacity="0.8" />
+                        <polyline points="190,230 195,280 180,310 240,210 270,160 320,120" fill="none" stroke="#00d4ff"
+                            stroke-width="4" stroke-dasharray="8,6" opacity="0.8" />
+                        <!-- Punta de flecha azul -->
+                        <polygon points="320,120 310,125 315,110" fill="#00d4ff" />
+
+                        <!-- Flujo Arterial (Entra izquierdo, baja, sale a aorta) -->
+                        <polyline points="350,220 330,260 310,310" fill="none" stroke="#ffeb3b" stroke-width="4"
+                            stroke-dasharray="10,5" opacity="0.8" />
+                        <polyline points="310,310 280,360 280,260 290,200 240,140" fill="none" stroke="#ffeb3b"
+                            stroke-width="4" stroke-dasharray="8,6" opacity="0.8" />
+                        <!-- Punta de flecha dorada -->
+                        <polygon points="240,140 250,145 245,130" fill="#ffeb3b" />
+                    </svg>
+                </div>
+
+                <p class="texto-rodeando">
+                    El corazón no es solo una bomba, son <span class="rojo">dos bombas sincronizadas</span> latiendo
+                    dentro de una estructura muscular ultra-resistente llamada miocardio. Su diseño hueco está
+                    fraccionado inteligentemente por un tabique central (septo), creando cuatro habitaciones: las
+                    aurículas arriba y los ventrículos abajo.
+                    <br><br>
+                    La mitad <span class="azul">derecha</span> se encarga de recibir la sangre sucia de todo el cuerpo a
+                    través de las venas cavas, empujándola hacia los pulmones para que recoja oxígeno fresco.
+                    <br><br>
+                    Simultáneamente, la mitad <span class="rojo">izquierda</span>, poseedora de la pared muscular más
+                    gruesa y poderosa, recibe esa sangre oxigenada y la dispara a traves de la enorme arteria Aorta
+                    hacia todo el organismo a altísima presión. Las válvulas blancas (Mitral y Tricúspide), ancladas con
+                    cuerdas fibrosas, previenen que la sangre retroceda.
+                </p>
+            </div>
+
+            <div class="separador"></div>
+
+            <!-- GRÁFICO 2: RED CORONARIA SUPERFICIAL (Exterior ultra detallado) -->
+            <div class="seccion-grafico">
+                <center>
+                    <h3 style="color:var(--text-main); margin-bottom: 5px;">Vasos Coronarios: Alimentando al Motor</h3>
+                </center>
+                <div class="grafico-wrap-bloque">
+                    <div class="tag" style="top: 15%; right: 10%; border-left: 2px solid var(--accent-red);">Arteria
+                        Descendente</div>
+
+                    <svg class="svg-ultra-realista" viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="translate(150, 0)">
+                            <!-- Masa base del corazón exterior -->
+                            <polygon points="100,260 170,160 190,100 130,50 80,60 20,120" fill="#4a1515" />
+                            <polygon points="100,260 170,160 120,200" fill="#5c1919" />
+                            <polygon points="170,160 190,100 140,140" fill="#6b1d1d" />
+                            <polygon points="190,100 130,50 140,140" fill="#7a2020" />
+                            <polygon points="130,50 80,60 110,120" fill="#8a2525" />
+                            <polygon points="80,60 20,120 110,120" fill="#6b1d1d" />
+                            <polygon points="20,120 100,260 110,120" fill="#5c1919" />
+                            <polygon points="100,260 120,200 110,120" fill="#4a1515" />
+                            <polygon points="170,160 120,200 140,140" fill="#8a2525" /> <!-- Highlight frontal -->
+                            <polygon points="120,200 110,120 140,140" fill="#9c2a2a" /> <!-- Max highlight -->
+
+                            <!-- Capas de grasa epicárdica (Amarillento bajo arterias) -->
+                            <polygon points="110,120 120,200 90,180" fill="#a89552" opacity="0.7" />
+                            <polygon points="90,180 120,200 105,230" fill="#8c7a3d" opacity="0.7" />
+                            <polygon points="130,50 110,120 150,90" fill="#bdac68" opacity="0.6" />
+
+                            <!-- ARTERIAS CORONARIAS (Rojo brillante facetado extruido) -->
+                            <!-- Superiores / Tronco Izquierdo -->
+                            <polygon points="130,50 140,55 125,75 115,70" fill="#ff1a1a" />
+                            <polygon points="140,55 145,52 130,72 125,75" fill="#ff4d4d" />
+
+                            <!-- Descendente Anterior Izquierda (Recorre el surco principal) -->
+                            <polygon points="125,75 130,72 115,110 110,113" fill="#ff1a1a" />
+                            <polygon points="115,110 110,113 125,180 130,177" fill="#d90000" />
+                            <polygon points="120,111 115,110 130,177 135,178" fill="#ff0000" /> <!-- borde luz -->
+                            <polygon points="125,180 130,177 105,250 100,253" fill="#b30000" />
+                            <polygon points="110,181 105,250 110,247 115,182" fill="#d90000" />
+
+                            <!-- Ramas diagonales finas en rojo -->
+                            <polyline points="115,110 135,130 160,140" fill="none" stroke="#ff1a1a" stroke-width="4"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <polyline points="114,111 134,131 159,141" fill="none" stroke="#ff4d4d" stroke-width="1.5"
+                                stroke-linecap="round" />
+                            <polyline points="125,180 150,195" fill="none" stroke="#d90000" stroke-width="3"
+                                stroke-linecap="round" />
+
+                            <!-- Coronaria Derecha (Bordeando el surco derecho) -->
+                            <polyline points="115,70 90,80 60,120 70,170" fill="none" stroke="#d90000" stroke-width="5"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <polyline points="114,71 89,81 59,121 69,171" fill="none" stroke="#ff3333" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+
+                            <!-- VENAS CARDÍACAS (Azul facetado superpuesto) -->
+                            <polyline points="105,240 120,180 105,120 75,90" fill="none" stroke="#0044cc"
+                                stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                            <polyline points="104,241 119,181 104,121 74,91" fill="none" stroke="#0077ff"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+
+                            <!-- Venas cruzando las arterias con sombras para simular altura -->
+                            <polyline points="160,150 130,140 105,120" fill="none" stroke="#000" stroke-width="5"
+                                opacity="0.4" stroke-linecap="round" /> <!-- sombra -->
+                            <polyline points="160,150 130,140 105,120" fill="none" stroke="#0055ff" stroke-width="3"
+                                stroke-linecap="round" />
+                        </g>
+                    </svg>
+                </div>
+                <p class="texto-rodeando">
+                    Paradójicamente, la sangre que corre dentro de las cavidades del corazón no alimenta al propio
+                    músculo debido al grosor de sus paredes. El corazón requiere su propia red privada de suministros.
+                    <br><br>
+                    Las primeras ramas que nacen de la Aorta conforman el sistema <span class="rojo">Coronario</span>:
+                    un intrincado bosque de diminutos tubos que recubren y penetran la superficie del revestimiento
+                    miocárdico. Un bloqueo en una de estas tuberías priva al músculo del oxígeno vital, ocasionando el
+                    colapso celular conocido como Infarto.
+                </p>
+            </div>
+
+            <div class="separador"></div>
+
+            <!-- GRÁFICO 3: DETALLE ZOOM DE LOS GLÓBULOS Y VÁLVULLAS -->
+            <div class="seccion-grafico">
+                <center>
+                    <h3 style="color:var(--text-main); margin-bottom: 5px;">Mecánica Microcelular</h3>
+                </center>
+                <div class="grafico-wrap-bloque">
+                    <svg class="svg-ultra-realista" viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Vista microscópica - Tubo arterial en sección -->
+                        <defs>
+                            <linearGradient id="artery-wall" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#4a0000" />
+                                <stop offset="50%" stop-color="#990000" />
+                                <stop offset="100%" stop-color="#330000" />
+                            </linearGradient>
+                            <linearGradient id="rbc" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ff3333" />
+                                <stop offset="70%" stop-color="#cc0000" />
+                                <stop offset="100%" stop-color="#660000" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Lumen del vaso sanguíneo -->
+                        <polygon points="50,20 450,20 500,50 500,150 450,180 50,180 0,150 0,50" fill="#1a0000" />
+                        <!-- Pared interior facetada inferior -->
+                        <polygon points="50,180 450,180 500,150 0,150" fill="#330000" />
+                        <polygon points="100,170 400,170 450,150 50,150" fill="#4d0000" />
+                        <polygon points="150,160 350,160 400,150 100,150" fill="#660000" />
+
+                        <!-- Malla de colágeno (rayos microscópicos) -->
+                        <path d="M 0,50 Q 250,10 500,50" fill="none" stroke="#cc0000" stroke-width="1.5"
+                            opacity="0.3" />
+                        <path d="M 0,80 Q 250,40 500,80" fill="none" stroke="#990000" stroke-width="1" opacity="0.4" />
+                        <path d="M 0,110 Q 250,80 500,110" fill="none" stroke="#660000" stroke-width="2"
+                            opacity="0.5" />
+
+                        <!-- Macrófago (Glóbulo blanco irregular) -->
+                        <polygon points="90,120 100,90 130,95 140,125 110,140" fill="#cfd8dc"
+                            filter="drop-shadow(3px 3px 5px rgba(0,0,0,0.5))" />
+                        <polygon points="100,90 115,105 130,95" fill="#eceff1" />
+                        <polygon points="90,120 115,105 110,140" fill="#b0bec5" />
+                        <circle cx="115" cy="115" r="8" fill="#546e7a" opacity="0.8" /> <!-- nucleo -->
+
+                        <!-- Glóbulos Rojos Low Poly realistas (Discos bicóncavos en varias perspectivas) -->
+                        <!-- Disco 1 (Frente oblicuo) -->
+                        <g transform="translate(250, 100) scale(1.5)" filter="drop-shadow(5px 5px 8px rgba(0,0,0,0.6))">
+                            <polygon points="-20,-10 0,-15 20,-10 25,5 15,15 -15,15 -25,5" fill="#800000" />
+                            <!-- borde inferior oscuro -->
+                            <polygon points="-20,-15 0,-20 20,-15 25,0 15,10 -15,10 -25,0" fill="#cc0000" />
+                            <!-- borde sup -->
+                            <polygon points="-15,-10 0,-15 15,-10 20,0 10,5 -10,5 -20,0" fill="#ff1a1a" />
+                            <!-- aro de luz -->
+                            <!-- Depresión central (Bicóncavo) -->
+                            <polygon points="-8,-4 0,-8 8,-4 10,2 5,6 -5,6 -10,2" fill="#800000" />
+                            <polygon points="-5,-2 0,-4 5,-2 6,2 3,4 -3,4 -6,2" fill="#4d0000" />
+                        </g>
+
+                        <!-- Disco 2 (Volteado 3D profundo) -->
+                        <g transform="translate(380, 80) scale(1.2) rotate(45)"
+                            filter="drop-shadow(4px 4px 5px rgba(0,0,0,0.5))">
+                            <polygon points="-20,-5 0,-8 20,-5 20,5 0,8 -20,5" fill="#4d0000" />
+                            <polygon points="-20,-10 0,-13 20,-10 20,0 0,3 -20,0" fill="#990000" />
+                            <polygon points="-15,-8 0,-11 15,-8 15,-2 0,1 -15,-2" fill="#ff3333" />
+                            <polygon points="-8,-4 0,-6 8,-4 8,-1 0,1 -8,-1" fill="#4d0000" />
+                        </g>
+
+                        <!-- Disco 3 (Cerca del borde difuminado) -->
+                        <g transform="translate(180, 130) scale(1.8) rotate(-20)"
+                            filter="drop-shadow(8px 8px 10px rgba(0,0,0,0.7))">
+                            <polygon points="-20,-15 0,-20 20,-15 25,0 15,10 -15,10 -25,0" fill="#b30000" />
+                            <polygon points="-15,-10 0,-15 15,-10 20,0 10,5 -10,5 -20,0" fill="#ff4d4d" />
+                            <polygon points="-8,-4 0,-8 8,-4 10,2 5,6 -5,6 -10,2" fill="#660000" />
+                        </g>
+                    </svg>
+                </div>
+                <p class="texto-rodeando">
+                    El desgaste del motor humano y su incesante bombeo requiere una armada logística. Viajando a
+                    increíbles velocidades a través de túneles oscuros se encuentran billones de <b>Eritrocitos</b>
+                    (glóbulos rojos). Su forma única (discos hundidos al centro) les otorga la capacidad geométrica
+                    perfecta para deformarse y colarse por capilares más finos que un cabello humano, entregando así el
+                    explosivo vital: <b>El oxígeno</b>.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

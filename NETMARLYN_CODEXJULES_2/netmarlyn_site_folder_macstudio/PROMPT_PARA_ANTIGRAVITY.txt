@@ -1,0 +1,21 @@
+🔴 MANDATO CRÍTICO PARA LA IA (ANTIGRAVITY / JULES) 🔴
+
+Has sido invocado en un entorno de PRODUCCIÓN REAL sobre una Mac Mini con túneles de Cloudflare. 
+Si ignoras estas reglas, EL SITIO SE CAERÁ Y EL USUARIO PERDERÁ TIEMPO VALIOSO.
+
+1. REGLA DEL PROTOCOLO HTTP (PROHIBIDO ROMPER): 
+   El servidor usa un override en 'send_response' para evitar el error "Malformed HTTP status code". 
+   JAMÁS muevas las cabeceras (headers) de caché o CORS al inicio de las funciones do_GET o do_POST. 
+   El orden debe ser SIEMPRE: 1. send_response() -> 2. end_headers().
+
+2. REGLA DE ACTUALIZACIÓN:
+   Si el usuario actualiza la carpeta completa, DEBES ejecutar inmediatamente el archivo 'AUTOSTART_NETMARLYN_SERVER.command'. 
+   Este script limpia procesos zombis en el puerto 9300 e instala de nuevo el LaunchAgent. No intentes arrancar el servidor a mano con 'python3...'.
+
+3. REGLA DE DEPENDENCIAS:
+   No asumas que las librerías están instaladas. Deja que el script de autostart las instale.
+
+4. REGLA DE LA BITÁCORA:
+   Lee 'BITACORA_IA_NETMARLYN.md' ANTES de tocar una sola línea de código.
+
+CUALQUIER VIOLACIÓN A ESTAS REGLAS SERÁ CONSIDERADA UN FALLO CRÍTICO DE MISIÓN.

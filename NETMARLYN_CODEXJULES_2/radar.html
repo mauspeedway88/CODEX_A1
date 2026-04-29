@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar NetMarlyn - GPS de Visitas</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            hieght: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background: #333;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px solid #007bff;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #007bff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #main {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 60px);
+        }
+
+        #map {
+            flex: 2;
+            height: 100%;
+            border-right: 1px solid #444;
+        }
+
+        #sidebar {
+            flex: 1;
+            background: #222;
+            overflow-y: auto;
+            padding: 15px;
+            max-width: 400px;
+        }
+
+        .visit-card {
+            background: #333;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .visit-card:hover {
+            transform: scale(1.02);
+            background: #3d3d3d;
+        }
+
+        .visit-time {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .visit-ip {
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .visit-loc {
+            font-size: 0.9rem;
+            margin: 5px 0;
+        }
+
+        .visit-device {
+            font-size: 0.7rem;
+            color: #888;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .badge {
+            background: #007bff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>📡 RADAR NETMARLYN - CONTROL DE VISITAS</h1>
+    </header>
+    <div id="main">
+        <div id="map"></div>
+        <div id="sidebar">
+            <h3>Últimas Visitas</h3>
+            <div id="visit-list">Cargando radar...</div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([13.6894, -89.1872], 9); // Centrado en El Salvador por defecto
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap &copy; CARTO'
+        }).addTo(map);
+
+        const markers = L.layerGroup().addTo(map);
+
+        async function updateRadar() {
+            try {
+                const response = await fetch('/api/radar/stats');
+                const visits = await response.json();
+
+                const list = document.getElementById('visit-list');
+                list.innerHTML = '';
+                markers.clearLayers();
+
+                visits.forEach((v, index) => {
+                    // Agregar a la lista
+                    const card = document.createElement('div');
+                    card.className = 'visit-card';
+                    card.innerHTML = `
+                        <div class="visit-time">${v.time}</div>
+                        <div class="visit-ip">${v.ip} <span class="badge">${v.country}</span></div>
+                        <div class="visit-loc">📍 ${v.city != 'Unknown' ? v.city : 'Ubicación oculta'}, ${v.region}</div>
+                        <div class="visit-device">📱 ${v.device}</div>
+                    `;
+
+                    card.onclick = () => {
+                        if (v.lat != '0.0') {
+                            map.setView([v.lat, v.lon], 15);
+                        } else {
+                            alert("Esta visita no tiene coordenadas precisas (Cloudflare Headers no activos o IP oculta).");
+                        }
+                    };
+                    list.appendChild(card);
+
+                    // Agregar al mapa si hay coordenadas
+                    if (v.lat != '0.0') {
+                        const marker = L.circleMarker([v.lat, v.lon], {
+                            radius: 8,
+                            fillColor: "#007bff",
+                            color: "#fff",
+                            weight: 1,
+                            opacity: 1,
+                            fillOpacity: 0.8
+                        }).addTo(markers);
+                        marker.bindPopup(`<b>${v.ip}</b><br>${v.city}, ${v.region}<br>${v.time}`);
+                    }
+                });
+            } catch (err) {
+                console.error("Error actualizando radar:", err);
+            }
+        }
+
+        // Actualizar cada 30 segundos
+        updateRadar();
+        setInterval(updateRadar, 30000);
+    </script>
+</body>
+
+</html>

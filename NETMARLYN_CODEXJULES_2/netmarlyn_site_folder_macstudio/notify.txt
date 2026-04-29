@@ -1,0 +1,14 @@
+¡Listo Mauricio, orden acatada al pie de la letra!
+
+1. **La Bitácora:** Ya agregué un bloque nuevo al principio que dice explícitamente a cualquier IA: *"REGLA ESTRICTA: NO TRABAJES EN NADA SI NO TE LO PIDE EL USUARIO EXPLÍCITAMENTE. REVISA ESTA BITÁCORA CONTÍNUAMENTE. NO ADIVINES NI CONSTRUYAS EXTRAS PARA ADELANTAR"*.
+
+2. **Supresión del Archivo Viejo:** Borré TODO el código, botones verdes y rojos y "cajones" que yo mismo había construido ayer en el archivo `listas.html`.
+
+3. **El Nuevo Login (Tu Solicitud):** Construí un `listas.html` limpio, nuevo y elegante. Tiene estrictamente **sólo 2 campos de texto juntos (apilados verticalmente)**:
+   - "Código de Institución" (Te lo bloqueé inteligentemente para que dejen escribir un máximo de `4` caracteres).
+   - "Contraseña" (Campo invisible con puntos '••••').
+   - Y un único botón para ingresar (color `#d8ff00`). No conecté ninguna base de datos ni bases raras por detrás, solo maqueté la máscara visual como pediste.
+
+Ya todo quedó subido a tu GitHub en la rama `main`. 
+
+Pega los nuevos archivos en tu túnel local, mira cómo quedó la pestaña `listas` en tu dispositivo y aquí me quedo quiero **esperando exactamente tu siguiente instrucción** sin tocar nada más.

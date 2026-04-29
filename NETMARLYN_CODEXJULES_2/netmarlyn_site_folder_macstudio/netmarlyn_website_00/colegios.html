@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script>
+        // NUCLEAR CACHE BUSTER (v5.3.3)
+        const CURRENT_VERSION = '8813';
+        if (localStorage.getItem('nm_force_refresh_v') !== CURRENT_VERSION) {
+            localStorage.setItem('nm_force_refresh_v', CURRENT_VERSION);
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(regs => {
+                    for(let reg of regs) reg.unregister();
+                });
+            }
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    for (let name of names) caches.delete(name);
+                });
+            }
+            window.location.reload(true);
+        }
+    </script>
+    <title>Netmarlyn - Colegios</title>
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#001342">
+    <link rel="apple-touch-icon" href="assets/G_icono_netmarlyn.jpg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Netmarlyn">
+    <link rel="icon" type="image/png" href="assets/favicon.png?v=1">
+    <link rel="stylesheet" href="style.css?v=8813">
+    <script src="js/nav_active.js"></script>
+
+    <!-- INTELIGENCIA DE VECTORIZACIÓN (Convierte fotos a SVG Flat) -->
+    <script src="js/ImageTracer.js"></script>
+
+    <style>
+        /* ===== PANEL DE COLEGIOS ===== */
+        .colegios-panel {
+            max-width: 700px; /* Aumentado para 3 columnas en desktop */
+            margin: 50px auto 30px auto;
+            padding: 20px;
+            text-align: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .panel-title {
+            color: white;
+            font-size: 22px;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .panel-subtitle {
+            color: #4fc3ff;
+            font-size: 13px;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
+
+        .main-action-btns {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 40px;
+        }
+
+        /* Estilos de botones movidos a style.css */
+
+        /* ===== VISTA: CREAR COLEGIO ===== */
+        .vista-panel {
+            max-width: 420px;
+            margin: 0 auto;
+            background-color: rgba(0, 19, 66, 0.6);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 14px;
+            padding: 30px 25px;
+            text-align: center;
+        }
+
+        .vista-panel h3 {
+            color: #00e5ff;
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .vista-panel p {
+            color: #a8a8a8;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .scan-area {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 2px dashed #142f56;
+            border-radius: 12px;
+            padding: 45px 20px;
+            margin-bottom: 20px;
+            color: #a8a8a8;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .scan-area .scan-icon {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .carnet-status {
+            display: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .carnet-denied {
+            background-color: rgba(255, 51, 51, 0.15);
+            border: 1px dashed #ff3333;
+            color: #ff3333;
+        }
+
+        .carnet-allowed {
+            background-color: rgba(216, 255, 0, 0.1);
+            border: 1px solid #d8ff00;
+            color: #d8ff00;
+        }
+
+        /* ===== VISTA: VER COLEGIOS ===== */
+        .search-box {
+            width: 100%;
+            padding: 13px 15px;
+            background-color: rgba(0, 19, 66, 0.8);
+            border: 1px solid #142f56;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .search-box:focus {
+            border-color: #00e5ff;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .colegio-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Móvil: 2 columnas */
+            gap: 15px;
+            justify-items: center;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .colegio-list {
+                grid-template-columns: repeat(3, 1fr); /* Escritorio: 3 columnas */
+            }
+        }
+
+        .colegio-item {
+            background: none;
+            border: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .colegio-item:hover {
+            transform: scale(1.05);
+            border: none;
+        }
+
+        .empty-state {
+            color: #a8a8a8;
+            font-size: 13px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        /* ===== FORMULARIO REGISTRO COLEGIO ===== */
+        .registro-colegio-form {
+            display: none;
+            text-align: left;
+            margin-top: 25px;
+            animation: fadeInColegio 0.5s ease-out;
+            border-top: 1px solid rgba(0, 229, 255, 0.2);
+            padding-top: 25px;
+        }
+
+        @keyframes fadeInColegio {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #00e5ff;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid #142f56;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            border-color: #00e5ff;
+            background-color: rgba(0, 229, 255, 0.05);
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
+        }
+
+        .gps-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-gps {
+            background-color: #d8ff00;
+            color: #001342;
+            border: none;
+            border-radius: 8px;
+            padding: 0 15px;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            height: 43px;
+            margin-top: 0;
+            white-space: nowrap;
+        }
+
+        .btn-gps:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            background: rgba(20, 47, 86, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(130, 158, 254, 0.2);
+        }
+
+        .level-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #829efe;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .level-item input {
+            cursor: pointer;
+            accent-color: #00e5ff;
+            width: 16px;
+            height: 16px;
+        }
+
+        .demo-trigger {
+            background: rgba(130, 158, 254, 0.08);
+            color: #829efe;
+            border: 1px solid rgba(130, 158, 254, 0.2);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .demo-trigger:hover {
+            background: rgba(130, 158, 254, 0.15);
+            border-color: #829efe;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            color: #a8a8a8;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #d8ff00;
+        }
+
+        /* Simular botón de demo/test */
+        .demo-trigger {
+            margin-top: 15px;
+            background: none;
+            border: 1px dashed #333;
+            color: #555;
+            font-size: 11px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .demo-trigger:hover {
+            color: #a8a8a8;
+            border-color: #a8a8a8;
+        }
+
+        /* OJO PARA PASSWORD */
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #a8a8a8;
+            user-select: none;
+            transition: color 0.3s;
+        }
+
+        .eye-icon:hover {
+            color: #00e5ff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <header class="top-bar">
+            <nav class="top-nav">
+                <a href="index.html?v=8813">inicio</a> • 
+                <a href="colegios.html?v=8813">colegios</a> • 
+                <a href="soporte.html?v=8813">soporte</a>
+            </nav>
+            <div class="logo-container">
+                <img id="main-logo" src="assets/G_nombrelogo.png" alt="Netmarlyn Logo">
+            </div>
+        </header>
+
+        
+        <!-- ===== MURO DE SEGURIDAD (MÓDULO 1) ===== -->
+        <div class="colegios-panel" id="vista-login">
+            <div class="panel-title">ACCESO INSTITUCIONAL</div>
+            <div class="panel-subtitle">Área Estrictamente Privada</div>
+            
+            <div style="background: rgba(0, 19, 66, 0.8); border: 1px solid #142f56; padding: 30px; border-radius: 15px; max-width: 350px; margin: 0 auto;">
+                <p style="color: #00e5ff; font-size: 12px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Ingrese credenciales o escanee carnet</p>
+                <input type="text" id="login-codigo" placeholder="CÓDIGO COLEGIO" style="width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(0,0,0,0.5); border: 1px solid #00e5ff; color: white; border-radius: 8px; text-align: center; font-weight: bold; letter-spacing: 2px;" onkeydown="if(event.key==='Enter') document.getElementById('login-pass').focus()">
+                <input type="password" id="login-pass" placeholder="CONTRASEÑA" style="width: 100%; padding: 12px; margin-bottom: 20px; background: rgba(0,0,0,0.5); border: 1px solid #142f56; color: white; border-radius: 8px; text-align: center; letter-spacing: 2px;" onkeydown="if(event.key==='Enter') iniciarSesionColegio()">
+                <div class="btn-netmarlyn" onclick="iniciarSesionColegio()" style="width: 100%; cursor: pointer;">
+                    <img class="btn-bg" src="assets/boton_netmarlyn_general.png" alt="">
+                    <span><em>ENTRAR AL</em><em>COLEGIO</em></span>
+                </div>
+                
+                <div style="margin-top: 25px; border-top: 1px dashed #142f56; padding-top: 20px;">
+                    <p style="color: #a8a8a8; font-size: 11px; margin-bottom: 10px;">Acceso Rápido con Cámara</p>
+                    <button style="background: transparent; border: 1px solid #d8ff00; color: #d8ff00; padding: 8px 15px; border-radius: 20px; font-size: 11px; cursor: pointer;">📷 ESCANEAR CARNET QR</button>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+        <!-- ===== VISTA: CREAR COLEGIO (Requiere CARNET_MASTER) ===== -->
+        <div class="colegios-panel" id="vista-crear" style="display:none;">
+            <div class="vista-panel">
+                <h3>🏫 CREAR COLEGIO</h3>
+                
+                <div id="master-auth-flow">
+                    <p style="color:#00e5ff; font-weight:bold; letter-spacing:1px; margin-bottom:25px;">
+                        ESTA FUNCIÓN ES EXCLUSIVA DEL ADMINISTRADOR CENTRAL.<br>
+                        <span style="color:white; font-size:11px; font-weight:normal;">(Requiere identificación física NM-ID nivel MASTER)</span>
+                    </p>
+
+                    <div class="scan-area" id="scan-area-crear" onclick="simularEscaneo('master')" style="cursor: pointer; transition: background 0.3s; border: 2px dashed rgba(0, 229, 255, 0.4); border-radius: 12px; margin-bottom: 30px;" onmouseover="this.style.background='rgba(0,229,255,0.1)'" onmouseout="this.style.background='rgba(0,0,0,0.4)'">
+                        <img src="assets/G_icono_netmarlyn.jpg" style="width: 40px; height: 40px; border-radius: 50%; margin-bottom: 10px; opacity: 0.8;">
+                        <span style="display:block; font-size: 14px; font-weight: 800; letter-spacing: 2px;">ESCANEA TU CARNET DE IDENTIFICACIÓN</span>
+                        <div style="margin-top: 5px; font-size: 10px; color: #829efe;">(O inicia sesión arriba para autorizar)</div>
+                    </div>
+
+                    <!-- Estado del carnet: se mostrará después del escaneo -->
+                    <div class="carnet-status carnet-denied" id="status-denied">
+                        ❌ ACCESO DENEGADO<br>
+                        <small style="font-weight:normal;">Tu carnet no tiene permisos para crear colegios.<br>Solo el Administrador Master puede realizar esta acción.</small>
+                    </div>
+
+                    <div class="carnet-status carnet-allowed" id="status-allowed">
+                        ✅ CARNET MASTER VERIFICADO<br>
+                        <small style="font-weight:normal; color: white;">Identidad confirmada. Por favor, introduce el PIN de seguridad para desbloquear el portal.</small>
+                    </div>
+
+                    <!-- NUEVO: Contenedor de PIN (v5.1) -->
+                    <div id="pin-entry-container" style="display:none; margin-top: 20px; animation: fadeInColegio 0.4s;">
+                        <label style="color:#00e5ff; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; display:block;">INTRODUCE PIN MASTER (4 DÍGITOS)</label>
+                        <input type="password" id="master-pin-input" maxlength="4" placeholder="****" 
+                               style="width: 120px; text-align: center; font-size: 24px; letter-spacing: 8px; background: rgba(0,0,0,0.5); border: 2px solid #142f56; color: #00e5ff; border-radius: 8px; padding: 10px; outline: none; margin-bottom: 15px;">
+                        <br>
+                        <button class="btn-netmarlyn" onclick="verificarMasterPIN()" style="width: 180px; height: 45px; background-image: url('assets/boton_netmarlyn_general.png'); background-size: 100% 100%; border:none; background-color:transparent; color:white; font-weight:bold; cursor:pointer;">
+                            DESBLOQUEAR PORTAL
+                        </button>
+                    </div>
+
+                    <!-- Botones de Demo -->
+                    <div id="demo-auth-btns" style="margin-top: 15px;">
+                        <button class="demo-trigger" onclick="simularEscaneo('denegado')">
+                            <span>🧪 Simular Alumno/Maestro</span>
+                            <span>❌</span>
+                        </button>
+                        <button class="demo-trigger" onclick="simularEscaneo('master')">
+                            <span>🔑 Simular CARNET_MASTER</span>
+                            <span>✅</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FORMULARIO DE REGISTRO (Oculto al inicio) -->
+                <div class="registro-colegio-form" id="form-nuevo-colegio">
+                    
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px; border-bottom: 1px dashed rgba(0, 229, 255, 0.2); padding-bottom: 15px;">
+                        <div style="flex:1; text-align:left;">
+                            <label style="color:#00e5ff; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; display:block;">LOGO (Opcional)</label>
+                            <input type="file" id="logo-input" accept="image/*" capture="environment" style="display: none;" onchange="previewLogo(event)">
+                            <button class="btn-gps" onclick="document.getElementById('logo-input').click()" style="background-color: #4fc3ff; color: #001342; width:fit-content; height: 35px;">
+                                📷 TOMAR FOTO LOGO
+                            </button>
+                            <small style="color:#a8a8a8; font-size:10px; display:block; margin-top:5px;">(Se convertirá a SVG Flat AI)</small>
+                        </div>
+                        <div id="logo-preview-container" style="width: 84px; height: 84px; border: 1px solid rgba(130,158,254,0.3); border-radius: 8px; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+                            <span style="font-size: 24px; opacity: 0.3;">🖼️</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>PREFIJO DEL COLEGIO (2 letras) — El sistema completa el resto</label>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <input
+                                type="text"
+                                id="reg-prefijo"
+                                placeholder="Ej: LA"
+                                maxlength="2"
+                                style="width:80px; text-transform:uppercase; font-size:20px; letter-spacing:4px; text-align:center;"
+                                oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,''); actualizarPreview()"
+                                onblur="forceCodegenIfEmpty()"
+                            >
+                            <span style="color:#829efe; font-size:22px; letter-spacing:3px; font-family:monospace;" id="preview-codigo">
+                                <span id="preview-prefijo" style="color:white;">__</span><span id="preview-sufijo" style="color:#829efe;">XX</span>
+                            </span>
+                            <small style="color:#555; font-size:11px; line-height:1.4;">Los 2 últimos<br>los genera el sistema</small>
+                            <input type="hidden" id="reg-sufijo-oculto" value="">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nombre de la Institución</label>
+                        <input type="text" id="reg-nombre" placeholder="Nombre completo del colegio">
+                    </div>
+
+                    <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                        <div style="flex:1;">
+                            <label>COLOR PRIMARIO</label>
+                            <input type="color" id="reg-color-p" value="#001342" style="height:45px; cursor:pointer; padding:2px;">
+                        </div>
+                        <div style="flex:1;">
+                            <label>COLOR SECUNDARIO</label>
+                            <input type="color" id="reg-color-s" value="#00e5ff" style="height:45px; cursor:pointer; padding:2px;">
+                        </div>
+                        <div style="flex:1;">
+                            <label>3ER COLOR (Opcional)</label>
+                            <input type="color" id="reg-color-3" value="#ffffff" style="height:45px; cursor:pointer; padding:2px;">
+                        </div>
+                        <div style="flex:1;">
+                            <label>4TO COLOR (Opcional)</label>
+                            <input type="color" id="reg-color-4" value="#d8ff00" style="height:45px; cursor:pointer; padding:2px;">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ubicación para Radar (GPS)</label>
+                        <div class="gps-row">
+                            <input type="text" id="reg-lat" placeholder="Latitud" style="flex:1;">
+                            <input type="text" id="reg-lon" placeholder="Longitud" style="flex:1;">
+                            <button class="btn-gps" onclick="capturarGPS()">
+                                📍 POSICIÓN
+                            </button>
+                        </div>
+                        <div id="gps-detalle" style="color:#00e5ff; font-size:12px; margin-top:8px; min-height:16px; letter-spacing:1px; font-weight:lighter;"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nombre del Contacto Administrativo</label>
+                        <input type="text" id="reg-admin-nombre" placeholder="Nombre completo del responsable">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Teléfono o WhatsApp</label>
+                        <input type="text" id="reg-tel" placeholder="Ej: +503 7000-0000">
+                    </div>
+
+                    <div style="text-align:center; margin-top: 30px;">
+                        <div class="btn-netmarlyn" onclick="guardarNuevoColegio()" style="width: 202px;">
+                            <img class="btn-bg" src="assets/boton_netmarlyn_general.png" alt="">
+                            <span><em>REGISTRAR</em><em>INSTITUCIÓN</em></span>
+                        </div>
+                    </div>
+                </div>
+
+                <a class="back-btn" onclick="mostrarVista('inicio')">← Cancelar y Volver</a>
+            </div>
+        </div>
+
+        <!-- ===== VISTA: VER COLEGIOS (Índice con Buscador) ===== -->
+        <div class="colegios-panel" id="vista-ver" style="display:none;">
+            <div class="panel-title">📋 Colegios Registrados</div>
+            <div class="panel-subtitle">Indexados por fecha de ingreso</div>
+
+            <input type="text" class="search-box" id="buscador-colegio" placeholder="🔍  Buscar por nombre o código..." oninput="filtrarColegios()">
+
+            <div class="colegio-list" id="lista-colegios">
+                <!-- Los colegios se renderizan aquí dinámicamente -->
+            </div>
+
+            <a class="back-btn" onclick="mostrarVista('inicio')">← Volver</a>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        //  SOLICITUD DE DATOS AL SERVIDOR
+        // ============================================================
+        let COLEGIOS_DB = [];
+
+        // --- SISTEMA DE AUTENTICACIÓN JWT (EL GUARDIÁN) ---
+        async function iniciarSesionColegio() {
+            const codigo = document.getElementById('login-codigo').value.trim().toUpperCase();
+            const password = document.getElementById('login-pass').value.trim();
+            
+            if(!codigo || !password) {
+                alert("Ingrese código institucional y contraseña.");
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codigo, password })
+                });
+
+                if(!res.ok) {
+                    throw new Error("Credenciales inválidas o Acceso Denegado.");
+                }
+
+                const data = await res.json();
+                
+                // Guardar la pulsera digital (JWT) en memoria segura persistente
+                localStorage.setItem('netmarlyn_jwt', data.token);
+                localStorage.setItem('netmarlyn_colegio', data.codigo);
+                localStorage.setItem('netmarlyn_nombre', data.nombre);
+                
+                // Redirigir a la vista unificada de acciones (o el radar/toma de asistencia)
+                window.location.href = 'acciones.html';
+
+            } catch (err) {
+                alert("❌ Acceso Denegado: " + err.message);
+                document.getElementById('login-pass').value = '';
+            }
+        }
+        
+        // Limpieza de sesión obligatoria por seguridad extrema
+        window.addEventListener('DOMContentLoaded', () => {
+            // Eliminar credenciales para no recordar el último colegio
+            localStorage.removeItem('netmarlyn_jwt');
+            localStorage.removeItem('netmarlyn_colegio');
+            localStorage.removeItem('netmarlyn_nombre');
+            
+            // Limpiar los campos visuales por si el navegador los autocompleta
+            if(document.getElementById('login-codigo')) document.getElementById('login-codigo').value = '';
+            if(document.getElementById('login-pass')) document.getElementById('login-pass').value = '';
+        });
+
+        // ============================================================
+        //  UTILIDADES UI
+        // ============================================================
+        function toggleMasterPassword() {
+            const pwdInput = document.getElementById('master-pass');
+            const eyeIcon = document.getElementById('eye-master');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                eyeIcon.textContent = '🙈';
+            } else {
+                pwdInput.type = 'password';
+                eyeIcon.textContent = '👁️';
+            }
+        }
+
+        async function cargarColegiosDelServidor() {
+            try {
+                const response = await fetch('/api/listar_colegios');
+                const data = await response.json();
+                if (data.status === 'ok') {
+                    COLEGIOS_DB = data.colegios;
+                    renderizarColegios(COLEGIOS_DB);
+                }
+            } catch (err) {
+                console.error("Error cargando colegios:", err);
+            }
+        }
+
+        // ============================================================
+        //  NAVEGACIÓN ENTRE VISTAS
+        // ============================================================
+        // ============================================================
+        //  NAVEGACIÓN ENTRE VISTAS
+        // ============================================================
+        function mostrarVista(cual) {
+            document.getElementById('vista-inicio').style.display = 'none';
+            document.getElementById('vista-crear').style.display  = 'none';
+            document.getElementById('vista-ver').style.display    = 'none';
+
+            if (cual === 'inicio') {
+                document.getElementById('vista-inicio').style.display = 'block';
+            } else if (cual === 'crear') {
+                document.getElementById('vista-crear').style.display = 'block';
+                // Activación de Seguridad Master (v4.5)
+                document.getElementById('master-auth-flow').style.display = 'block';
+                document.getElementById('form-nuevo-colegio').style.display = 'none';
+                document.getElementById('status-denied').style.display = 'none';
+                document.getElementById('status-allowed').style.display = 'none';
+            } else if (cual === 'ver') {
+                document.getElementById('vista-ver').style.display = 'block';
+                cargarColegiosDelServidor();
+            }
+        }
+
+        // ============================================================
+        //  SIMULAR ESCANEO DE CARNET (Demo hasta que existan QR reales)
+        // ============================================================
+        function simularEscaneo(tipo) {
+            const allowed = document.getElementById('status-allowed');
+            const denied  = document.getElementById('status-denied');
+            const flow    = document.getElementById('master-auth-flow');
+            const form    = document.getElementById('form-nuevo-colegio');
+
+            if (denied) denied.style.display  = 'none';
+            if (allowed) allowed.style.display = 'none';
+
+            if (tipo === 'master') {
+                // FLUJO ULTRA-SIMPLE (v5.1.2) - TAL COMO PIDIÓ EL USUARIO
+                const password = prompt("🚨 NIVEL MASTER DETECTADO\nPor favor, introduce el password para desbloquear:");
+                
+                if (password === '8813') {
+                    if (allowed) allowed.style.display = 'block';
+                    alert("✅ IDENTIDAD MASTER CONFIRMADA. Portal Desbloqueado.");
+                    flow.style.display = 'none';
+                    form.style.display = 'block';
+                } else {
+                    if (denied) denied.style.display = 'block';
+                    alert("❌ PASSWORD INCORRECTO. Acceso denegado.");
+                }
+            } else {
+                // Alumno/Otro (Solo visual)
+                if (denied) denied.style.display = 'block';
+            }
+        }
+
+        function verificarMasterPIN() {
+            const pinVal = document.getElementById('master-pin-input').value;
+            const flow    = document.getElementById('master-auth-flow');
+            const form    = document.getElementById('form-nuevo-colegio');
+
+            if (pinVal === '8813') {
+                // ÉXITO TOTAL
+                flow.style.display = 'none';
+                form.style.display = 'block';
+                // Reset para seguridad
+                document.getElementById('master-pin-input').value = "";
+            } else {
+                alert("PIN INCORRECTO. Acceso denegado por seguridad.");
+                document.getElementById('master-pin-input').value = "";
+                document.getElementById('master-pin-input').focus();
+            }
+        }
+
+        // ============================================================
+        //  FUNCIONES DEL FORMULARIO DE REGISTRO
+        // ============================================================
+        function capturarGPS() {
+            const btn = event.currentTarget;
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '⌛ Buscando...';
+            btn.disabled = true;
+
+            if (!navigator.geolocation) {
+                alert("Tu navegador no soporta geolocalización.");
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                async (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
+                    
+                    document.getElementById('reg-lat').value = lat.toFixed(6);
+                    document.getElementById('reg-lon').value = lon.toFixed(6);
+                    btn.innerHTML = 'Buscando lugar...';
+
+                    try {
+                        // Reverse Geocoding usando OpenStreetMap Nominatim API (Gratis, sin key)
+                        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`);
+                        const data = await response.json();
+                        
+                        let infoGPS = [];
+                        if (data && data.address) {
+                            const pais = data.address.country || "";
+                            const ciudad = data.address.city || data.address.town || data.address.village || data.address.county || data.address.state || "";
+                            const residencial = data.address.suburb || data.address.neighbourhood || data.address.residential || data.address.road || "";
+                            
+                            if (pais) infoGPS.push(`País: ${pais}`);
+                            if (ciudad) infoGPS.push(`Ciudad: ${ciudad}`);
+                            if (residencial) infoGPS.push(`Ref: ${residencial}`);
+                        }
+
+                        btn.innerHTML = '✅ OK';
+                        btn.style = ''; // Limpiamos cualquier estilo previo
+
+                        if (infoGPS.length > 0) {
+                            document.getElementById('gps-detalle').innerHTML = `🌍 ${infoGPS.join(' | ')}`;
+                        } else {
+                            document.getElementById('gps-detalle').innerHTML = 'Ubicación obtenida sin detalles geográficos.';
+                        }
+                    } catch (e) {
+                        btn.innerHTML = '✅ OK'; // Fallback a OK si falla geocoding
+                        btn.style = '';
+                        document.getElementById('gps-detalle').innerHTML = 'Coordenadas obtenidas (detalle no disponible).';
+                    }
+                    
+                    btn.disabled = false;
+                },
+                (err) => {
+                    alert("Error capturando GPS: " + err.message);
+                    btn.innerHTML = '❌ FALLO';
+                    btn.disabled = false;
+                },
+                { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+            );
+        }
+
+        function generarSufijoAleatorio() {
+            const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            return chars.charAt(Math.floor(Math.random() * chars.length)) + chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        let logoBase64 = null;
+        let logoSVG = null; // Guardará el código matemático de dibujo
+
+        function previewLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // 1. FORZAR FORMATO CUADRADO (1:1) - Center Crop
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        const target_size = 100; // Restaurado a Estándar Estable (~46KB)
+                        canvas.width = target_size;
+                        canvas.height = target_size;
+
+                        // Cálculo para recorte central (mantiene proporción sin deformar)
+                        let sourceX, sourceY, sourceWidth, sourceHeight;
+                        if (img.width > img.height) {
+                            sourceHeight = img.height;
+                            sourceWidth = img.height;
+                            sourceX = (img.width - img.height) / 2;
+                            sourceY = 0;
+                        } else {
+                            sourceWidth = img.width;
+                            sourceHeight = img.width;
+                            sourceX = 0;
+                            sourceY = (img.height - img.width) / 2;
+                        }
+                        
+                        ctx.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, target_size, target_size);
+                        
+                        // 2. Extraer Base64 ultra ligero
+                        const imgDataResized = canvas.toDataURL('image/png');
+                        logoBase64 = imgDataResized;
+
+                        const container = document.getElementById('logo-preview-container');
+                        container.innerHTML = '<span style="font-size:12px; color:#4fc3ff;">Mapeando...</span>';
+
+                        // 3. NETMARLYN AI VECTORIZER (En imagen de 84x84 vuela en milisegundos)
+                        setTimeout(() => {
+                            ImageTracer.imageToSVG(
+                                imgDataResized,
+                                function(svgstr) {
+                                    // 1. Mostramos el SVG en la miniatura de forma directa
+                                    container.innerHTML = svgstr;
+                                    
+                                    // 2. Extraemos el SVG recién creado y forzamos su visibilidad total
+                                    const svgNode = container.querySelector('svg');
+                                    if (svgNode) {
+                                        // Le damos 100% para que llene el contenedor padre (84x84)
+                                        svgNode.setAttribute('width', '100%');
+                                        svgNode.setAttribute('height', '100%');
+                                        
+                                        // Ajustamos el ViewBox al formato cuadrado forzado
+                                        svgNode.setAttribute('viewBox', `0 0 ${target_size} ${target_size}`);
+                                        
+                                        svgNode.style.display = 'block';
+                                        svgNode.style.objectFit = 'contain';
+                                    }
+
+                                    // 3. Guardamos la pura magia matemática (el string HTML arreglado)
+                                    logoSVG = container.innerHTML; 
+                                },
+                                { 
+                                    // Netmarlyn Estándar Estable (~46KB)
+                                    colorsampling: 2, 
+                                    numberofcolors: 10, 
+                                    mincolorratio: 0.02,
+                                    colorquantcycles: 3,
+                                    pathomit: 8, // Limpieza profunda de nodos
+                                    ltres: 1.2, // Simplificación estable
+                                    qtres: 1.2, // Simplificación estable
+                                    blurradius: 2.0, // Suavizado para evitar exceso de detalles
+                                    blurdelta: 30,
+                                    scale: 1
+                                }
+                            );
+                        }, 50);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function actualizarPreview() {
+            const prefijoEl = document.getElementById('reg-prefijo');
+            let prefijo = prefijoEl.value.toUpperCase();
+            
+            // Forzar solo letras para el prefijo
+            prefijo = prefijo.replace(/[^A-Z]/g, '');
+            prefijoEl.value = prefijo;
+
+            const p_pre = document.getElementById('preview-prefijo');
+            const p_suf = document.getElementById('preview-sufijo');
+            const hiddenSufijo = document.getElementById('reg-sufijo-oculto');
+            
+            if (p_pre) p_pre.textContent = (prefijo || '__').padEnd(2, '_');
+
+            // Si el usuario escribe la segunda letra, generamos los números
+            if (prefijo.length === 2) {
+                if (!hiddenSufijo.value) {
+                    hiddenSufijo.value = generarSufijoAleatorio();
+                }
+                if (p_suf) p_suf.textContent = hiddenSufijo.value;
+            } else {
+                hiddenSufijo.value = "";
+                if (p_suf) p_suf.textContent = "XX";
+            }
+        }
+
+        function forceCodegenIfEmpty() {
+             const prefijoEl = document.getElementById('reg-prefijo');
+             let val = prefijoEl.value;
+             // Si el usuario deja 1 letra o ninguna, auto-completamos con letras al azar M -> MX, o vacío -> LA
+             if(val.length === 1) {
+                 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                 prefijoEl.value = val + chars.charAt(Math.floor(Math.random() * chars.length));
+             } else if (val.length === 0) {
+                 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                 prefijoEl.value = chars.charAt(Math.floor(Math.random() * chars.length)) + chars.charAt(Math.floor(Math.random() * chars.length));
+             }
+             actualizarPreview();
+        }
+
+        async function guardarNuevoColegio() {
+            const prefijo = document.getElementById('reg-prefijo').value.trim().toUpperCase();
+            const sufijo = document.getElementById('reg-sufijo-oculto').value.trim().toUpperCase();
+            const nombre = document.getElementById('reg-nombre').value.trim();
+            const lat = document.getElementById('reg-lat').value.trim();
+            const lon = document.getElementById('reg-lon').value.trim();
+            const adminNombre = document.getElementById('reg-admin-nombre').value.trim();
+            const adminTel = document.getElementById('reg-tel').value.trim();
+            const colorP = document.getElementById('reg-color-p').value;
+            const colorS = document.getElementById('reg-color-s').value;
+            const color3 = document.getElementById('reg-color-3').value;
+            const color4 = document.getElementById('reg-color-4').value;
+
+            const codigoFinal = prefijo + sufijo;
+
+            // Validaciones Estrictas
+            if (!prefijo || prefijo.length !== 2 || sufijo.length !== 2) {
+                alert("⚠️ PREFIJO INVÁLIDO\n\nDebes ingresar exactamente 2 letras para identificar el colegio.\nEjemplo: LA para Los Andes");
+                return;
+            }
+            if (!nombre || !adminNombre || !adminTel) {
+                alert("⚠️ CAMPOS OBLIGATORIOS FALTANTES\n\nNombre del colegio, contacto y teléfono son obligatorios.");
+                return;
+            }
+
+            const btn = event.currentTarget;
+            btn.style.pointerEvents = 'none';
+            btn.style.opacity = '0.7';
+
+            const payload = {
+                id: codigoFinal, // Volvemos a enviar 'id' completo para no romper la API original temporal
+                prefijo: prefijo,
+                nombre: nombre,
+                gps: { lat: lat, lon: lon },
+                admin_contacto: adminNombre,
+                admin_telefono: adminTel,
+                color_primario: colorP,
+                color_secundario: colorS,
+                color_3: color3,
+                color_4: color4,
+                logo_svg: logoSVG, // Ahora enviamos PURA MATEMÁTICA LIGERA, cero píxeles.
+                master_user: document.getElementById('master-user').value || "sim_master"
+            };
+
+            console.log("Enviando registro de colegio con logo VECTORIZADO:", payload.id);
+            
+            try {
+                // TODO: En producción este endpoint guardará en /colegios_data/
+                const response = await fetch('/api/registrar_colegio', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                
+                if (data.status === 'ok') {
+                    alert(`✅ COLEGIO REGISTRADO EXITOSAMENTE\n\nNombre: ${nombre}\nCódigo Asignado: ${data.codigo}\n\nGuarda este código — lo necesitarás para ingresar a las listas y fotos.`);
+                    mostrarVista('inicio');
+                    window.scrollTo(0, 0); // Sube hasta el primer píxel inmediatamente
+                } else {
+                    alert("❌ ERROR: " + data.msg);
+                }
+            } catch (err) {
+                // Simulacro si el endpoint no existe aún
+                console.error("Error en el registro:", err);
+                alert("✅ DEMO: Colegio registrado localmente.\n(El servidor necesita el endpoint /api/registrar_colegio)");
+                mostrarVista('inicio');
+            } finally {
+                btn.style.pointerEvents = 'auto';
+                btn.style.opacity = '1';
+            }
+        }
+
+        // ============================================================
+        //  RENDERIZAR + FILTRAR LISTA DE COLEGIOS
+        // ============================================================
+        function renderizarColegios(lista) {
+            const contenedor = document.getElementById('lista-colegios');
+            if (lista.length === 0) {
+                contenedor.innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;">🏫 No se encontraron colegios.</div>';
+                return;
+            }
+
+            contenedor.innerHTML = lista.map(c => {
+                // Limpiar la palabra "Colegio" o "Institución" para ahorrar espacio
+                let nombreLimpio = c.nombre.replace(/colegio|institución/gi, '').trim();
+                
+                // Dividir en dos líneas si es muy largo
+                const palabras = nombreLimpio.split(' ');
+                let linea1 = palabras.slice(0, 2).join(' ');
+                let linea2 = palabras.slice(2).join(' ');
+                
+                // Si la línea 1 es muy corta o no hay línea 2, reajustar
+                if (linea1.length < 5 && linea2) {
+                    linea1 = palabras.slice(0, 3).join(' ');
+                    linea2 = palabras.slice(3).join(' ');
+                }
+
+                return `
+                <div class="colegio-item">
+                    <div class="btn-netmarlyn" onclick="location.href='index.html?nm_codigo=${c.codigo}'" style="width: 180px; height: 58px;">
+                        <img class="btn-bg" src="assets/boton_netmarlyn_general.png" alt="" style="width: 180px; height: 58px;">
+                        <span style="font-size: 10px; width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <em>${linea1.toUpperCase()}</em>
+                            ${linea2 ? `<em>${linea2.toUpperCase()}</em>` : ''}
+                        </span>
+                    </div>
+                    <div style="color: #4fc3ff; font-size: 9px; margin-top: -5px; letter-spacing: 2px; font-weight: bold;">
+                        ${c.codigo}
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function filtrarColegios() {
+            const query = document.getElementById('buscador-colegio').value.toLowerCase();
+            const filtrados = COLEGIOS_DB.filter(c =>
+                c.nombre.toLowerCase().includes(query) ||
+                c.codigo.toLowerCase().includes(query)
+            );
+            renderizarColegios(filtrados);
+        }
+
+        // ============================================================
+        //  ANTI-CACHE DEL LOGO
+        // ============================================================
+        document.addEventListener("DOMContentLoaded", function () {
+            var logo = document.getElementById("main-logo");
+            if (logo) {
+                logo.src = 'assets/G_nombrelogo.png?v=' + new Date().getTime();
+            }
+        });
+
+        /* 
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js');
+            });
+        }
+        */
+    </script>
+</body>
+
+</html>

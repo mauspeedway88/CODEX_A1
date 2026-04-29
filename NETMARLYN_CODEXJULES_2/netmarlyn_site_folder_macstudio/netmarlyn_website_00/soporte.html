@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script>
+        // NUCLEAR CACHE BUSTER (v5.3.3)
+        const CURRENT_VERSION = '8813';
+        if (localStorage.getItem('nm_force_refresh_v') !== CURRENT_VERSION) {
+            localStorage.setItem('nm_force_refresh_v', CURRENT_VERSION);
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(regs => {
+                    for(let reg of regs) reg.unregister();
+                });
+            }
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    for (let name of names) caches.delete(name);
+                });
+            }
+            window.location.reload(true);
+        }
+    </script>
+    <title>Netmarlyn - Desktop</title>
+
+    <!-- Configuración PWA (Manifiesto e Íconos) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#001342">
+
+    <!-- Configuración para iOS (iPhone/iPad) -->
+    <link rel="apple-touch-icon" href="assets/G_icono_netmarlyn.jpg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Netmarlyn">
+
+    <link rel="icon" type="image/png" href="assets/favicon.png?v=1">
+    <link rel="stylesheet" href="style.css?v=10">
+    <script src="js/nav_active.js"></script>
+    <style>
+        /* ===== SOPORTE PANEL ===== */
+        .soporte-panel {
+            max-width: 500px;
+            margin: 100px auto;
+            text-align: center;
+        }
+
+        .soporte-title {
+            color: white;
+            font-size: 22px;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        /* Estilos de botones movidos a style.css */
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <header class="top-bar">
+            <nav class="top-nav">
+                <a href="index.html?v=8813">inicio</a> • 
+                <a href="colegios.html?v=8813">colegios</a> • 
+                <a href="soporte.html?v=8813">soporte</a>
+            </nav>
+            <div class="logo-container">
+                <img id="main-logo" src="assets/G_nombrelogo.png" alt="Netmarlyn Logo">
+            </div>
+        </header>
+
+        <section class="soporte-panel">
+            <div class="soporte-title">Soporte Técnico Especializado</div>
+            
+            <div class="btn-netmarlyn" onclick="location.href='MAUNET_SITE_SS_2/index.html'">
+                <img class="btn-bg" src="assets/boton_netmarlyn_general.png" alt="Botón MAUNET-IA">
+                <span><em>MAUNET-IA</em></span>
+            </div>
+
+            <div style="margin-top:20px;"></div>
+
+            <div class="btn-netmarlyn" onclick="accederInfografias()">
+                <img class="btn-bg" src="assets/boton_netmarlyn_general.png" alt="Botón Crear Infografias">
+                <span><em>CREAR</em><em>INFOGRAFIAS</em></span>
+            </div>
+
+            <div style="margin-top:20px;"></div>
+
+            <div class="btn-netmarlyn" onclick="location.href='ver_infografias.html?v=8813'">
+                <img class="btn-bg" src="assets/boton_netmarlyn_general.png" alt="Botón Ver Infografias">
+                <span><em>VER</em><em>INFOGRAFIAS</em></span>
+            </div>
+
+            <div style="margin-top:20px;"></div>
+
+            <div class="btn-netmarlyn" onclick="alert('Funcionalidad SOSestoy activada. Su ubicación ha sido enviada.')">
+                <img class="btn-bg" src="assets/boton_netmarlyn_general.png" alt="Botón SOSestoy">
+                <span><em>SOS</em><em>ESTOY</em></span>
+            </div>
+        </section>
+
+        <!-- =========================================
+             FOOTER
+        ========================================= -->
+        <footer class="home-footer">
+            <div class="footer-logo">NetMarlyn®</div>
+            <p class="footer-text">Infraestructura Escolar Digital Avanzada</p>
+            
+            <div class="footer-emails">
+                <a href="mailto:info@netmarlyn.site">info@netmarlyn.site</a> | 
+                <a href="mailto:maunet@netmarlyn.site">maunet@netmarlyn.site</a> | 
+                <a href="mailto:soporte@netmarlyn.site">soporte@netmarlyn.site</a>
+            </div>
+
+            <p class="footer-copy">© 2026 NetMarlyn. Todos los derechos reservados.</p>
+        </footer>
+
+    </div>
+
+    <!-- Script para evitar SIEMPRE el caché de las imágenes durante el desarrollo -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var logo = document.getElementById("main-logo");
+            if (logo) {
+                // Le agrega un número aleatorio de tiempo al final (ej: ?v=170810...) para forzar la descarga de la imagen real.
+                logo.src = 'assets/G_nombrelogo.png?v=' + new Date().getTime();
+            }
+        });
+
+        // Script para acceso restringido a infografías
+        function accederInfografias() {
+            const pin = prompt("ADMINISTRADOR - INGRESE PIN MAESTRO DE ACCESO:");
+            if (pin === '8813') {
+                location.href = 'crear_infografia.html?v=8813';
+            } else if (pin !== null) {
+                alert("❌ PIN INCORRECTO. ACCESO DENEGADO.");
+            }
+        }
+
+        // Registro del Service Worker para convertir la web en App (PWA) instalable
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker registrado con éxito:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Error al registrar el Service Worker:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+
+</html>
